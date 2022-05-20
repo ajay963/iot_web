@@ -1,0 +1,23 @@
+<svg width="226" height="226" viewBox="0 0 226 226" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M221 113L206.789 113" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<path d="M19.2104 113L4.99992 113" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<path d="M113 221L113 206.789" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<path d="M113 19.2105L113 5" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<g opacity="0.8">
+<circle cx="159.853" cy="194.363" r="3.55263" transform="rotate(60 159.853 194.363)" fill="white"/>
+<circle cx="65.7084" cy="31.2997" r="3.55263" transform="rotate(60 65.7084 31.2997)" fill="white"/>
+</g>
+<g opacity="0.8">
+<circle cx="194.363" cy="65.4362" r="3.55263" transform="rotate(-30 194.363 65.4362)" fill="white"/>
+<circle cx="31.2998" cy="159.581" r="3.55263" transform="rotate(-30 31.2998 159.581)" fill="white"/>
+</g>
+<g opacity="0.8">
+<circle cx="194.902" cy="160.369" r="3.55263" transform="rotate(30 194.902 160.369)" fill="white"/>
+<circle cx="31.8382" cy="66.2241" r="3.55263" transform="rotate(30 31.8382 66.2241)" fill="white"/>
+</g>
+<g opacity="0.8">
+<circle cx="160.369" cy="31.8088" r="3.55263" transform="rotate(-60 160.369 31.8088)" fill="white"/>
+<circle cx="66.2241" cy="194.872" r="3.55263" transform="rotate(-60 66.2241 194.872)" fill="white"/>
+</g>
+<circle opacity="0.8" cx="113" cy="113" r="79" stroke="white" stroke-width="6"/>
+</svg>
