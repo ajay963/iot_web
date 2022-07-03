@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iot/colors.dart';
 
 class Themeing {
+  static const Color primaryColor = Color(0xffEC0055);
   static ThemeData lightTheme = ThemeData(
     backgroundColor: kLtGrey,
     listTileTheme: ListTileThemeData(
@@ -63,5 +64,28 @@ class Themeing {
             fontFeatures: const [
               FontFeature.superscripts(),
             ])),
+  );
+
+  static ThemeData darkTheme = ThemeData(
+    primaryColor: primaryColor,
+    textTheme: TextTheme(
+      bodyLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: primaryColor),
+      bodyMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.5,
+          color: Colors.white.withOpacity(0.6)),
+      bodySmall: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 16,
+          height: 8,
+          fontWeight: FontWeight.w700,
+          color: Colors.white),
+    ),
   );
 }

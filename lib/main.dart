@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:iot/onBoardScreens/on_board.dart';
-import 'package:iot/screens/bluetooth_setup.dart';
+import 'package:iot/widgets/google_map.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/provider/colors_list.dart';
 import 'package:iot/provider/crawler_data.dart';
@@ -34,9 +33,27 @@ class MyApp extends StatelessWidget {
           color: Colors.orange,
           themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
-          home: Scaffold(
-              backgroundColor: Colors.orange.shade500,
-              body: const BluetoothSetup())),
+          home: const GoogleMapsWidget()),
     );
   }
+}
+
+class CrController extends StatelessWidget {
+  const CrController({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: Row(
+children[]
+      ),
+      body: Stack(
+        children: [
+
+        ],
+      ),
+    );
+
+  }
+ 
 }
