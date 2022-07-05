@@ -1,5 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:iot/colors.dart';
+import 'package:line_icons/line_icons.dart';
+
+class KBackButton extends StatelessWidget {
+  final Function() onTap;
+  const KBackButton({Key? key, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withOpacity(0.6),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(40),
+        onTap: onTap,
+        child: const Icon(
+          LineIcons.arrowLeft,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
 
 class CustomRoudedButto extends StatelessWidget {
   final String text;
@@ -113,7 +139,7 @@ class CircularButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme _txtTheme = Theme.of(context).textTheme;
+    //final TextTheme _txtTheme = Theme.of(context).textTheme;
     return InkWell(
       borderRadius: BorderRadius.circular(40),
       splashColor: Colors.orange.shade100,

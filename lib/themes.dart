@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iot/colors.dart';
 
+const Color kThemeShadeMagenta = Color(0xffEC0055);
+
 class Themeing {
   static const Color primaryColor = Color(0xffEC0055);
   static ThemeData lightTheme = ThemeData(

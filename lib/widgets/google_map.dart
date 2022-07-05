@@ -13,8 +13,8 @@ class GoogleMapsWidget extends StatefulWidget {
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late GoogleMapController _mapController;
   final CameraPosition _kGooglePlex = const CameraPosition(
-    target: LatLng(23.749055, 86.269883),
-    zoom: 14.4746,
+    target: LatLng(23.344101, 85.309563),
+    zoom: 14,
   );
   changeMapMode() {
     getMapStyle('assets/maps/darkMap.json').then(setMapStyle);

@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:iot/themes.dart';
+import 'package:line_icons/line_icons.dart';
 
-class CollisionIdget extends StatelessWidget {
+class CollisionWidget extends StatelessWidget {
   final double distance;
-  const CollisionIdget({Key? key, required this.distance}) : super(key: key);
+  const CollisionWidget({Key? key, required this.distance}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('${distance.toInt()} Ahead'),
+        SizedBox(
+          height: 20,
+          child: Text(
+            '${distance.toInt()} Ahead',
+            style: textTheme.bodyMedium,
+          ),
+        ),
+        const SizedBox(height: 4),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'collision alert',
-              style: textTheme.bodySmall,
+              style: textTheme.bodyLarge,
             ),
-            const Icon(Icons.warning)
+            const SizedBox(width: 20),
+            const Icon(
+              LineIcons.exclamationTriangle,
+              color: kThemeShadeMagenta,
+            )
           ],
         )
       ],
