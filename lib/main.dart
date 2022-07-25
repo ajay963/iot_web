@@ -1,5 +1,6 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:iot/websocket_led.dart';
 import 'package:iot/widgets/buttos.dart';
 import 'package:iot/widgets/collision_widget.dart';
 import 'package:iot/widgets/crawler_info.dart';
@@ -11,12 +12,26 @@ import 'package:iot/provider/crawler_data.dart';
 import 'package:iot/provider/light_data.dart';
 import 'package:iot/provider/network.dart';
 import 'package:iot/themes.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
+  await Window.initialize();
+  doWhenWindowReady(() {
+    const initialSize = Size(600, 450);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    WindowEffect.acrylic;
+    appWindow.show();
+  });
+  await Window.setEffect(
+    effect: WindowEffect.aero,
+    color: const Color(0xAA000000),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -34,10 +49,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           theme: Themeing.darkTheme,
-          color: Colors.orange,
+          color: Colors.transparent,
           themeMode: ThemeMode.dark,
           debugShowCheckedModeBanner: false,
-          home: const CrController()),
+          home: const WebSocketLed()),
     );
   }
 }
@@ -71,7 +86,7 @@ class CrController extends StatelessWidget {
                   children: [
                     const CrJoyStickPad(),
                     SizedBox(
-                      width: double.infinity - 20,
+                      width: MediaQuery.of(context).size.width - 20,
                       child: CrawlerInfo(
                           speed: _crawlerData.getXPosition ~/ 2,
                           temp: (_crawlerData.getYPosition - 30).abs(),
