@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LightData extends ChangeNotifier {
+class ColorData extends ChangeNotifier {
   double _brightness = 100;
   Color _colorData1 = const Color(0xff00ffe0);
   Color _colorData2 = const Color(0xff00ffe0);

@@ -1,17 +1,18 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:iot/websocket_led.dart';
 import 'package:iot/widgets/buttos.dart';
-import 'package:iot/widgets/collision_widget.dart';
-import 'package:iot/widgets/crawler_info.dart';
+import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
+import 'package:iot/widgets/crawler_info.dart';
 import 'package:iot/widgets/joystick_pad.dart';
-import 'package:provider/provider.dart';
 import 'package:iot/provider/colors_list.dart';
 import 'package:iot/provider/crawler_data.dart';
 import 'package:iot/provider/light_data.dart';
-import 'package:iot/provider/network.dart';
-import 'package:iot/themes.dart';
+import 'package:iot/provider/sensors_data.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 Future<void> main() async {
@@ -41,7 +42,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<LightData>(create: (context) => LightData()),
+        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
+        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
+        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
+        ChangeNotifierProvider<HumidityData>(
+            create: (context) => HumidityData()),
         ChangeNotifierProvider<InternetCheckerClass>(
             create: (context) => InternetCheckerClass()),
         ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),

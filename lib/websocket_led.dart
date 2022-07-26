@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -17,11 +19,16 @@ class _WebSocketLed extends State<WebSocketLed> {
   late bool ledstatus; //boolean value to track LED status, if its ON or OFF
   late IOWebSocketChannel channel;
   late bool connected; //boolean value to track if WebSocket is connected
-
+  late String temp; //variable for temperature
+  late String humidity; //variable for humidity
+  late String heatindex; //variable for heatindex
   @override
   void initState() {
     ledstatus = false; //initially leadstatus is off so its FALSE
     connected = false; //initially connection status is "NO" so its FALSE
+    temp = "0"; //initial value of temperature
+    humidity = "0"; //initial value of humidity
+    heatindex = "0"; //initial value of heatindex
 
     Future.delayed(Duration.zero, () async {
       channelconnect(); //connect to WebSocket wth NodeMCU
@@ -41,6 +48,16 @@ class _WebSocketLed extends State<WebSocketLed> {
           setState(() {
             if (message == "connected") {
               connected = true; //message is "connected" from NodeMCU
+            } else if (message.substring(0, 6) == "{'temp") {
+              message = message.replaceAll(RegExp("'"), '"');
+
+              Map<String, dynamic> jsondata =
+                  json.decode(message); //decode json to array
+              setState(() {
+                temp = jsondata["temp"]; //temperature value
+                humidity = jsondata["humidity"]; //humidity value
+                heatindex = jsondata["heat"]; //heatindex value
+              });
             } else if (message == "poweron:success") {
               ledstatus = true;
             } else if (message == "poweroff:success") {
@@ -105,6 +122,12 @@ class _WebSocketLed extends State<WebSocketLed> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      "Temperature $temp°C | Humidity: $humidity",
+                    ),
+                    const SizedBox(height: 10),
+                    Text("Heat Index: $heatindex°C"),
+                    const SizedBox(height: 10),
                     Container(
                         child: connected
                             ? const Text("WEBSOCKET: CONNECTED")
@@ -113,29 +136,27 @@ class _WebSocketLed extends State<WebSocketLed> {
                         child: ledstatus
                             ? const Text("LED IS: ON")
                             : const Text("LED IS: OFF")),
-                    Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        child: RoundedButton(
-                          //button to start scanning
+                    const SizedBox(height: 30),
+                    RoundedButton(
+                      //button to start scanning
 
-                          onTap: () {
-                            //on button press
-                            if (ledstatus) {
-                              //if ledstatus is true, then turn off the led
-                              //if led is on, turn off
-                              sendcmd("poweroff");
-                              ledstatus = false;
-                            } else {
-                              //if ledstatus is false, then turn on the led
-                              //if led is off, turn on
-                              sendcmd("poweron");
-                              ledstatus = true;
-                            }
-                            setState(() {});
-                          },
-                          buttonLabel:
-                              ledstatus ? "TURN LED OFF" : "TURN LED ON",
-                        ))
+                      onTap: () {
+                        //on button press
+                        if (ledstatus) {
+                          //if ledstatus is true, then turn off the led
+                          //if led is on, turn off
+                          sendcmd("poweroff");
+                          ledstatus = false;
+                        } else {
+                          //if ledstatus is false, then turn on the led
+                          //if led is off, turn on
+                          sendcmd("poweron");
+                          ledstatus = true;
+                        }
+                        setState(() {});
+                      },
+                      buttonLabel: ledstatus ? "TURN LED OFF" : "TURN LED ON",
+                    )
                   ],
                 ),
               )
