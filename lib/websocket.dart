@@ -1,44 +1,58 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:iot/models/temp.dart';
+import 'package:iot/provider/sensors_data.dart';
 import 'package:iot/widgets/buttos.dart';
+import 'package:iot/widgets/graph_charts.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-//apply this class on home: attribute at MaterialApp()
-class WebSocketLed extends StatefulWidget {
-  const WebSocketLed({Key? key}) : super(key: key);
+class WebSocketDesktop extends StatefulWidget {
+  const WebSocketDesktop({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _WebSocketLed();
+    return _WebSocketDesktop();
   }
 }
 
-class _WebSocketLed extends State<WebSocketLed> {
-  late bool ledstatus; //boolean value to track LED status, if its ON or OFF
+class _WebSocketDesktop extends State<WebSocketDesktop> {
+  late bool ledstatus;
   late IOWebSocketChannel channel;
-  late bool connected; //boolean value to track if WebSocket is connected
-  late String temp; //variable for temperature
-  late String humidity; //variable for humidity
-  late String heatindex; //variable for heatindex
+  late bool connected;
+  late String temp;
+  late String humidity;
+  late String heatindex;
+  int idx = 0;
+  late List<TempChartData> tempList = [
+    TempChartData(time: 0, temp: 0),
+  ];
   @override
   void initState() {
-    ledstatus = false; //initially leadstatus is off so its FALSE
-    connected = false; //initially connection status is "NO" so its FALSE
-    temp = "0"; //initial value of temperature
-    humidity = "0"; //initial value of humidity
-    heatindex = "0"; //initial value of heatindex
-
+    ledstatus = false;
+    connected = false;
+    temp = "0";
+    humidity = "0";
+    heatindex = "0";
+    Timer.periodic(const Duration(seconds: 1), updateGraph);
     Future.delayed(Duration.zero, () async {
       channelconnect(); //connect to WebSocket wth NodeMCU
     });
-
     super.initState();
   }
 
+  void updateGraph(Timer time) {
+    setState(() {
+      tempList
+          .add(TempChartData(time: idx.toDouble(), temp: double.parse(temp)));
+      idx = idx + 10;
+      if (tempList.length > 11) tempList.removeAt(0);
+    });
+  }
+
   channelconnect() {
-    //function to connect
     try {
       channel =
           IOWebSocketChannel.connect("ws://192.168.4.1:81"); //channel IP : Port
@@ -47,16 +61,15 @@ class _WebSocketLed extends State<WebSocketLed> {
           print(message);
           setState(() {
             if (message == "connected") {
-              connected = true; //message is "connected" from NodeMCU
+              connected = true;
             } else if (message.substring(0, 6) == "{'temp") {
               message = message.replaceAll(RegExp("'"), '"');
 
-              Map<String, dynamic> jsondata =
-                  json.decode(message); //decode json to array
+              Map<String, dynamic> jsondata = json.decode(message);
               setState(() {
-                temp = jsondata["temp"]; //temperature value
-                humidity = jsondata["humidity"]; //humidity value
-                heatindex = jsondata["heat"]; //heatindex value
+                temp = jsondata["temp"];
+                humidity = jsondata["humidity"];
+                heatindex = jsondata["heat"];
               });
             } else if (message == "poweron:success") {
               ledstatus = true;
@@ -96,6 +109,8 @@ class _WebSocketLed extends State<WebSocketLed> {
 
   @override
   Widget build(BuildContext context) {
+    final _tempSensorData = Provider.of<TempData>(context);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SizedBox(
@@ -128,6 +143,18 @@ class _WebSocketLed extends State<WebSocketLed> {
                     const SizedBox(height: 10),
                     Text("Heat Index: $heatindex°C"),
                     const SizedBox(height: 10),
+                    Text("timer : " + idx.toString()),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 200,
+                      // width: 400,
+                      child: Charts(
+                        tempList: tempList,
+                        xAisLabel: 'Time',
+                        yAxisLabel: 'Temp',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     Container(
                         child: connected
                             ? const Text("WEBSOCKET: CONNECTED")
@@ -138,18 +165,11 @@ class _WebSocketLed extends State<WebSocketLed> {
                             : const Text("LED IS: OFF")),
                     const SizedBox(height: 30),
                     RoundedButton(
-                      //button to start scanning
-
                       onTap: () {
-                        //on button press
                         if (ledstatus) {
-                          //if ledstatus is true, then turn off the led
-                          //if led is on, turn off
                           sendcmd("poweroff");
                           ledstatus = false;
                         } else {
-                          //if ledstatus is false, then turn on the led
-                          //if led is off, turn on
                           sendcmd("poweron");
                           ledstatus = true;
                         }

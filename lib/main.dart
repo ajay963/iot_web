@@ -1,7 +1,7 @@
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:iot/websocket_led.dart';
+import 'package:iot/websocket.dart';
 import 'package:iot/widgets/buttos.dart';
 import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
@@ -22,7 +22,7 @@ Future<void> main() async {
   runApp(const MyApp());
   await Window.initialize();
   doWhenWindowReady(() {
-    const initialSize = Size(600, 450);
+    const initialSize = Size(720, 520);
     appWindow.minSize = initialSize;
     appWindow.size = initialSize;
     appWindow.alignment = Alignment.center;
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
           color: Colors.transparent,
           themeMode: ThemeMode.dark,
           debugShowCheckedModeBanner: false,
-          home: const WebSocketLed()),
+          home: const WebSocketDesktop()),
     );
   }
 }

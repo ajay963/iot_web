@@ -46,7 +46,7 @@ dependencies:
   flutter_svg: ^1.0.3
   shared_preferences: ^2.0.13
   line_icons: ^2.0.1
-  dependencies:
+  syncfusion_flutter_charts: ^20.2.40
   syncfusion_flutter_gauges: ^20.2.36
   
   #gaming assets
@@ -57,6 +57,7 @@ dependencies:
   connectivity_plus: ^1.1.0
   internet_connection_checker: ^0.0.1+2
   web_socket_channel: ^2.2.0
+  
   bitsdojo_window: ^0.1.1+1
 
 dev_dependencies:

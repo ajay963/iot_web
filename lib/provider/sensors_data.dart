@@ -9,6 +9,7 @@ class TempData extends ChangeNotifier {
   int get getTemp => _temp;
   int get getMinLux => _minTemp;
   int get getMaxLux => _maxTemp;
+
   setMinMax() {
     if (_temp < _minTemp) _minTemp = _temp;
     if (_temp > _maxTemp) _maxTemp = _temp;
