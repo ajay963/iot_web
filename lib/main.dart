@@ -1,5 +1,6 @@
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:iot/widgets/desktop_crawler.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/websocket.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -22,11 +23,14 @@ Future<void> main() async {
   runApp(const MyApp());
   await Window.initialize();
   doWhenWindowReady(() {
-    const initialSize = Size(720, 520);
-    appWindow.minSize = initialSize;
+    const initialSize = Size(900, 530);
+    // const maxSize = Size(1080, 720);
     appWindow.size = initialSize;
+    appWindow.minSize = initialSize;
+    appWindow.maxSize = initialSize;
+    appWindow.title = "Flutter ESP-IOT";
     appWindow.alignment = Alignment.center;
-    WindowEffect.acrylic;
+    WindowEffect.aero;
     appWindow.show();
   });
   await Window.setEffect(
@@ -57,7 +61,15 @@ class MyApp extends StatelessWidget {
           color: Colors.transparent,
           themeMode: ThemeMode.dark,
           debugShowCheckedModeBanner: false,
-          home: const WebSocketDesktop()),
+          home: DesktopView(
+            title: 'Flutter ESP-32',
+            leftPannel: Container(
+              color: Colors.black,
+            ),
+            rightPannel: Container(
+              color: Colors.transparent,
+            ),
+          )),
     );
   }
 }

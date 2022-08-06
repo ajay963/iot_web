@@ -85,9 +85,9 @@ class Themeing {
       bodySmall: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
-          height: 8,
-          fontWeight: FontWeight.w700,
-          color: Colors.white),
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.bold,
+          color: Colors.white.withOpacity(0.6)),
     ),
   );
 }
