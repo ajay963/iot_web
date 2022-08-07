@@ -19,6 +19,7 @@ class DesktopView extends StatelessWidget {
       children: [
         WindowTitleBarBox(
           child: Container(
+            height: 34,
             width: MediaQuery.of(context).size.width,
             color: const Color(0xff333333),
             child: MoveWindow(
@@ -28,7 +29,7 @@ class DesktopView extends StatelessWidget {
                   children: [
                     const SizedBox(width: 20),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(20),
                       child: SizedBox(
                         height: 20,
                         width: 20,
@@ -48,28 +49,8 @@ class DesktopView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(40),
-                    //   child: SizedBox(
-                    //     height: 20,
-                    //     width: 20,
-                    //     child: Center(
-                    //       child: Stack(
-                    //         children: [
-                    //           Container(
-                    //             height: 20,
-                    //             width: 20,
-                    //             color: Colors.green,
-                    //           ),
-                    //           MaximizeWindowButton(),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(width: 20),
                     Text(
-                      title,
+                      '  ' + title,
                       style: txtTheme.bodySmall,
                     ),
                   ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const Color themeColor1 = Color(0xFFF5AF19);
+const Color themeColor2 = Color(0xFFF12711);
 const Color kTxtWhite = Color(0xffFeFeFe);
 const Color kMdGrey = Color(0xff666666);
 const Color kLtGrey = Color(0xffAAAAAA);

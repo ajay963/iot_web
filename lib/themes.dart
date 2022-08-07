@@ -7,6 +7,8 @@ const Color kThemeShadeMagenta = Color(0xffEC0055);
 
 class Themeing {
   static const Color primaryColor = Color(0xffEC0055);
+  static const Color themeColor = Color(0xffFF924C);
+
   static ThemeData lightTheme = ThemeData(
     backgroundColor: kLtGrey,
     listTileTheme: ListTileThemeData(
@@ -73,21 +75,37 @@ class Themeing {
     textTheme: TextTheme(
       bodyLarge: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: primaryColor),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: kLtGrey),
       bodyMedium: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.5,
-          color: Colors.white.withOpacity(0.6)),
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: themeColor),
       bodySmall: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: kTxtWhite),
+      labelLarge: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 24,
           letterSpacing: 1.5,
           fontWeight: FontWeight.bold,
-          color: Colors.white.withOpacity(0.6)),
+          color: themeColor),
+      labelMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.5,
+          color: kTxtWhite),
+      labelSmall: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 12,
+          letterSpacing: 1,
+          fontWeight: FontWeight.bold,
+          color: themeColor),
     ),
   );
 }

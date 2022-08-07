@@ -1,6 +1,6 @@
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:iot/widgets/desktop_crawler.dart';
+import 'package:iot/widgets/desktop_layout.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/websocket.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -16,6 +16,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
+import 'layouts/desktop_monitor.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -23,7 +25,7 @@ Future<void> main() async {
   runApp(const MyApp());
   await Window.initialize();
   doWhenWindowReady(() {
-    const initialSize = Size(900, 530);
+    const initialSize = Size(900, 550);
     // const maxSize = Size(1080, 720);
     appWindow.size = initialSize;
     appWindow.minSize = initialSize;
@@ -65,6 +67,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter ESP-32',
             leftPannel: Container(
               color: Colors.black,
+              child: const SensorMonitorPannel(),
             ),
             rightPannel: Container(
               color: Colors.transparent,
