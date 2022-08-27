@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:iot/colors.dart';
-import 'package:iot/layouts/radial_gauges.dart';
+import 'package:iot/widgets/radial_gauges.dart';
 import 'package:iot/models/temp.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -127,7 +127,7 @@ class _SensorMonitorPannel extends State<SensorMonitorPannel> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 40),
@@ -140,7 +140,7 @@ class _SensorMonitorPannel extends State<SensorMonitorPannel> {
           SizedBox(
               width: 500, child: GyroAxisData(xAxis: 15, yAxis: 12, zAxis: 36)),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            padding: EdgeInsets.only(top: 30, left: 10, bottom: 10),
             child: SensorsDataDisplay(
                 temp: 24.toString(),
                 humidity: 28.toString(),
@@ -240,7 +240,10 @@ class GyroAxisData extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RotationGuage(
-                        color1: themeColor1, color2: themeColor2, value: xAxis),
+                        label: 'x-axis',
+                        color1: themeColor1,
+                        color2: themeColor2,
+                        value: xAxis),
                     const SizedBox(height: 5),
                     const Text('x-axis')
                   ],
@@ -256,7 +259,10 @@ class GyroAxisData extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RotationGuage(
-                        color1: themeColor1, color2: themeColor2, value: yAxis),
+                        label: 'y-axis',
+                        color1: themeColor1,
+                        color2: themeColor2,
+                        value: yAxis),
                     const SizedBox(height: 5),
                     const Text('y-axis')
                   ],
@@ -272,7 +278,10 @@ class GyroAxisData extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RotationGuage(
-                        color1: themeColor1, color2: themeColor2, value: zAxis),
+                        label: 'z-axis',
+                        color1: themeColor1,
+                        color2: themeColor2,
+                        value: zAxis),
                     const SizedBox(height: 5),
                     const Text('x-axis')
                   ],

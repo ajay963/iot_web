@@ -1,3 +1,4 @@
+import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:iot/widgets/desktop_layout.dart';
@@ -15,15 +16,17 @@ import 'package:iot/provider/sensors_data.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-
 import 'layouts/desktop_monitor.dart';
+import 'package:rive/rive.dart' as rive;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final cachedAnimation = await RiveAvatar.cachedAnimation;
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(const MyApp());
+  runApp(MyApp(artboard: cachedAnimation.artboardByName('SPACE')));
   await Window.initialize();
+  WidgetsBinding.instance.addPostFrameCallback((_) {});
   doWhenWindowReady(() {
     const initialSize = Size(900, 550);
     // const maxSize = Size(1080, 720);
@@ -32,48 +35,52 @@ Future<void> main() async {
     appWindow.maxSize = initialSize;
     appWindow.title = "Flutter ESP-IOT";
     appWindow.alignment = Alignment.center;
-    WindowEffect.aero;
+    // WindowEffect.aero;
     appWindow.show();
   });
   await Window.setEffect(
     effect: WindowEffect.aero,
-    color: const Color(0xAA000000),
+    color: const Color(0xaa000000),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final rive.Artboard? artboard;
+  const MyApp({Key? key, required this.artboard}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
-        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
-        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
-        ChangeNotifierProvider<HumidityData>(
-            create: (context) => HumidityData()),
-        ChangeNotifierProvider<InternetCheckerClass>(
-            create: (context) => InternetCheckerClass()),
-        ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
-        ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
-      ],
-      child: MaterialApp(
-          theme: Themeing.darkTheme,
-          color: Colors.transparent,
-          themeMode: ThemeMode.dark,
-          debugShowCheckedModeBanner: false,
-          home: DesktopView(
-            title: 'Flutter ESP-32',
-            leftPannel: Container(
-              color: Colors.black,
-              child: const SensorMonitorPannel(),
-            ),
-            rightPannel: Container(
-              color: Colors.transparent,
-            ),
-          )),
-    );
+        providers: [
+          ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
+          ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
+          ChangeNotifierProvider<TempData>(create: (context) => TempData()),
+          ChangeNotifierProvider<HumidityData>(
+              create: (context) => HumidityData()),
+          ChangeNotifierProvider<InternetCheckerClass>(
+              create: (context) => InternetCheckerClass()),
+          ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
+          ChangeNotifierProvider<CrawlerData>(
+              create: (context) => CrawlerData())
+        ],
+        child: MaterialApp(
+            theme: Themeing.darkTheme,
+            color: Colors.transparent,
+            themeMode: ThemeMode.dark,
+            debugShowCheckedModeBanner: false,
+            home: MoveWindow(child: SpaceScene(artboard)))
+        // const WebSocketDesktop(),
+        //     DesktopView(
+        //   title: 'Fltter ESP-32',
+        //   leftPannel: Container(
+        //     color: Colors.black.withOpacity(0.6),
+        //     child: const SensorMonitorPannel(),
+        //   ),
+        //   rightPannel: Container(
+        //     color: Colors.transparent,
+        //   ),
+        // )),
+        );
   }
 }
 
@@ -156,4 +163,27 @@ class KAppBar extends StatelessWidget {
       ),
     ]);
   }
+}
+
+class SpaceScene extends StatelessWidget {
+  /// All interactive avatar logic is managed there, controller-like.
+  final RiveAvatar _avatar;
+
+  SpaceScene(rive.Artboard? cachedArtboard, {Key? key})
+      : _avatar = RiveAvatar(cachedArtboard),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: MouseRegion(
+          onHover: (event) => _avatar.move(event.localPosition),
+          // The useArtboardSize is important for accurate pointer position.
+          child: rive.Rive(
+            artboard: _avatar.artboard,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
 }

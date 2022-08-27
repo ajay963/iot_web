@@ -1,39 +1,46 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-
-class CrawlerData {
+class ControlData {
   final int xPos;
   final int yPos;
-  final bool isHeadLampOn;
-  final Color lampColor;
-  CrawlerData({
+  final bool isActive;
+  final int red;
+  final int green;
+  final int blue;
+
+  ControlData({
     required this.xPos,
     required this.yPos,
-    required this.isHeadLampOn,
-    required this.lampColor,
+    required this.isActive,
+    required this.red,
+    required this.green,
+    required this.blue,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'xPos': xPos,
       'yPos': yPos,
-      'isHeadLampOn': isHeadLampOn,
-      'lampColor': lampColor.value,
+      'isActive': isActive,
+      'red': red,
+      'green': green,
+      'blue': blue,
     };
   }
 
-  factory CrawlerData.fromMap(Map<String, dynamic> map) {
-    return CrawlerData(
+  factory ControlData.fromMap(Map<String, dynamic> map) {
+    return ControlData(
       xPos: map['xPos']?.toInt() ?? 0,
       yPos: map['yPos']?.toInt() ?? 0,
-      isHeadLampOn: map['isHeadLampOn'] ?? false,
-      lampColor: Color(map['lampColor']),
+      isActive: map['isActive'] ?? false,
+      red: map['red']?.toInt() ?? 0,
+      green: map['green']?.toInt() ?? 0,
+      blue: map['blue']?.toInt() ?? 0,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CrawlerData.fromJson(String source) =>
-      CrawlerData.fromMap(json.decode(source));
+  factory ControlData.fromJson(String source) =>
+      ControlData.fromMap(json.decode(source));
 }

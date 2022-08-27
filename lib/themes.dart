@@ -5,7 +5,7 @@ import 'package:iot/colors.dart';
 
 const Color kThemeShadeMagenta = Color(0xffEC0055);
 
-class Themeing {
+class Themeing extends ChangeNotifier {
   static const Color primaryColor = Color(0xffEC0055);
   static const Color themeColor = Color(0xffFF924C);
 
@@ -72,6 +72,7 @@ class Themeing {
 
   static ThemeData darkTheme = ThemeData(
     primaryColor: primaryColor,
+    backgroundColor: Colors.black,
     textTheme: TextTheme(
       bodyLarge: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
@@ -81,12 +82,14 @@ class Themeing {
       bodyMedium: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: themeColor),
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w500,
+          color: kLtGrey),
       bodySmall: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
-          fontWeight: FontWeight.bold,
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w500,
           color: kTxtWhite),
       labelLarge: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
@@ -105,7 +108,7 @@ class Themeing {
           fontSize: 12,
           letterSpacing: 1,
           fontWeight: FontWeight.bold,
-          color: themeColor),
+          color: kLtGrey),
     ),
   );
 }
