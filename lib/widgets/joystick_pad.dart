@@ -14,8 +14,8 @@ class CrJoyStickPad extends StatelessWidget {
     return SizedBox(
       child: Stack(alignment: Alignment.center, children: [
         Container(
-          height: 100,
-          width: 100,
+          height: 50,
+          width: 50,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white.withOpacity(0.4),
@@ -46,7 +46,7 @@ class _RotationGuage extends StatelessWidget {
           endAngle: 270,
           showTicks: false,
           showLabels: false,
-          radiusFactor: 0.68,
+          radiusFactor: 1.1,
           ranges: [
             GaugeRange(
               startValue: 0,
@@ -59,6 +59,7 @@ class _RotationGuage extends StatelessWidget {
               value: _crawlerData.getXPosition.toDouble().abs(),
               cornerStyle: CornerStyle.bothCurve,
               enableAnimation: true,
+              animationDuration: 200,
               width: 10,
               color: Colors.white,
               gradient: const SweepGradient(colors: [kThemeShadeMagenta]),
@@ -113,8 +114,8 @@ class __JoyStickControllerState extends State<_JoyStickController> {
     return Joystick(
       mode: _joystickMode,
       stick: Container(
-        height: 50,
-        width: 50,
+        height: 25,
+        width: 25,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white.withOpacity(0.8),

@@ -1,11 +1,11 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
-class DesktopView extends StatelessWidget {
+class DesktopSplitView extends StatelessWidget {
   final String title;
   final Widget leftPannel;
   final Widget rightPannel;
-  const DesktopView(
+  const DesktopSplitView(
       {Key? key,
       required this.title,
       required this.leftPannel,
@@ -99,6 +99,121 @@ class DesktopView extends StatelessWidget {
             SizedBox(width: 400, child: rightPannel)
           ],
         ))
+      ],
+    );
+  }
+}
+
+class DesktopSingleView extends StatelessWidget {
+  final String title;
+  final Widget bottomPannel;
+
+  const DesktopSingleView({
+    Key? key,
+    required this.title,
+    required this.bottomPannel,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final txtTheme = Theme.of(context).textTheme;
+    WindowButtonColors minButtonColor = WindowButtonColors(
+        normal: Colors.transparent, mouseOver: Colors.transparent);
+    WindowButtonColors closeButtonColor = WindowButtonColors(
+        normal: Colors.transparent, mouseOver: Colors.transparent);
+
+    return Column(
+      children: [
+        WindowTitleBarBox(
+          child: Container(
+            height: 34,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.black.withOpacity(0.2),
+            child: MoveWindow(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: Center(
+                          child: Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              Container(
+                                height: 24,
+                                width: 24,
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xffff0844),
+                                    Color(0xffffb199),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                )),
+                              ),
+                              Opacity(
+                                opacity: 0,
+                                child: CloseWindowButton(
+                                  colors: closeButtonColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: Center(
+                          child: Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              Container(
+                                height: 24,
+                                width: 24,
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xff38f9d7),
+                                    Color(0xff43e97b),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                )),
+                              ),
+                              Opacity(
+                                opacity: 0,
+                                child: MinimizeWindowButton(
+                                  colors: minButtonColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '  ' + title,
+                      style: txtTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: bottomPannel)
       ],
     );
   }

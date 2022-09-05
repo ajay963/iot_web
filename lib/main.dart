@@ -3,7 +3,6 @@ import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:iot/widgets/desktop_layout.dart';
 import 'package:provider/provider.dart';
-import 'package:iot/websocket.dart';
 import 'package:iot/widgets/buttos.dart';
 import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
@@ -21,6 +20,7 @@ import 'package:rive/rive.dart' as rive;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final cachedAnimation = await RiveAvatar.cachedAnimation;
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -35,7 +35,7 @@ Future<void> main() async {
     appWindow.maxSize = initialSize;
     appWindow.title = "Flutter ESP-IOT";
     appWindow.alignment = Alignment.center;
-    // WindowEffect.aero;
+
     appWindow.show();
   });
   await Window.setEffect(
@@ -51,36 +51,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
-          ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
-          ChangeNotifierProvider<TempData>(create: (context) => TempData()),
-          ChangeNotifierProvider<HumidityData>(
-              create: (context) => HumidityData()),
-          ChangeNotifierProvider<InternetCheckerClass>(
-              create: (context) => InternetCheckerClass()),
-          ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
-          ChangeNotifierProvider<CrawlerData>(
-              create: (context) => CrawlerData())
-        ],
-        child: MaterialApp(
-            theme: Themeing.darkTheme,
-            color: Colors.transparent,
-            themeMode: ThemeMode.dark,
-            debugShowCheckedModeBanner: false,
-            home: MoveWindow(child: SpaceScene(artboard)))
-        // const WebSocketDesktop(),
-        //     DesktopView(
-        //   title: 'Fltter ESP-32',
-        //   leftPannel: Container(
-        //     color: Colors.black.withOpacity(0.6),
-        //     child: const SensorMonitorPannel(),
-        //   ),
-        //   rightPannel: Container(
-        //     color: Colors.transparent,
-        //   ),
-        // )),
-        );
+      providers: [
+        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
+        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
+        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
+        ChangeNotifierProvider<HumidityData>(
+            create: (context) => HumidityData()),
+        ChangeNotifierProvider<InternetCheckerClass>(
+            create: (context) => InternetCheckerClass()),
+        ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
+        ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
+      ],
+      child: MaterialApp(
+          theme: Themeing.darkTheme,
+          color: Colors.transparent,
+          themeMode: ThemeMode.dark,
+          debugShowCheckedModeBanner: false,
+          home: DesktopSingleView(
+            title: 'Flutter ESP-32',
+            bottomPannel: Container(
+              color: Colors.black.withOpacity(0.4),
+              child: const SensorMonitorPannel(),
+            ),
+          )),
+    );
   }
 }
 

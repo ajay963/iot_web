@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:iot/colors.dart';
+import 'package:iot/provider/sensors_data.dart';
+import 'package:iot/widgets/joystick_pad.dart';
 import 'package:iot/widgets/radial_gauges.dart';
 import 'package:iot/models/temp.dart';
 import 'package:web_socket_channel/io.dart';
@@ -130,42 +132,51 @@ class _SensorMonitorPannel extends State<SensorMonitorPannel> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 40),
-          SizedBox(
-            height: 180,
-            child: DashRadialSpeedGauge(
-                value: 34, color1: themeColor1, color2: themeColor2),
+          Center(
+            child: SizedBox(
+                width: 700,
+                child: GyroAxisData(xAxis: 15, yAxis: 12, zAxis: 36)),
           ),
-          const SizedBox(height: 20),
-          SizedBox(
-              width: 500, child: GyroAxisData(xAxis: 15, yAxis: 12, zAxis: 36)),
+          const SizedBox(height: 80),
+          Center(
+            child: SizedBox(
+              height: 150,
+              width: 150,
+              child: CrJoyStickPad(),
+            ),
+          ),
+          SizedBox(height: 100),
           Padding(
-            padding: EdgeInsets.only(top: 30, left: 10, bottom: 10),
-            child: SensorsDataDisplay(
-                temp: 24.toString(),
-                humidity: 28.toString(),
-                satelliteNo: 6,
-                seaLevel: 1078,
-                connected: isConnected,
-                collisionDistance: 43),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AtmosData(temp: '45', humidity: '33'),
+                SizedBox(
+                  width: 50,
+                ),
+                GPSdata(
+                    satelliteNo: 6,
+                    seaLevel: 1078,
+                    connected: isConnected,
+                    collisionDistance: 43),
+              ],
+            ),
           ),
         ]);
   }
 }
 
-class SensorsDataDisplay extends StatelessWidget {
-  const SensorsDataDisplay({
+class GPSdata extends StatelessWidget {
+  const GPSdata({
     Key? key,
-    required this.temp,
-    required this.humidity,
     required this.satelliteNo,
     required this.seaLevel,
     required this.connected,
     required this.collisionDistance,
   }) : super(key: key);
 
-  final String temp;
-  final String humidity;
   final int satelliteNo;
   final int seaLevel;
 
@@ -182,10 +193,6 @@ class SensorsDataDisplay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              temp + '     ' + 'Humidity : ' + humidity,
-              style: txtTheme.bodyLarge,
-            ),
             SizedBox(height: boxSize.toDouble()),
             Text(
                 'satellite: ' +
@@ -204,10 +211,6 @@ class SensorsDataDisplay extends StatelessWidget {
               else
                 TextSpan(text: 'disconnected ', style: txtTheme.bodySmall),
               const TextSpan(text: '  '),
-              const TextSpan(text: 'collision '),
-              TextSpan(
-                  text: collisionDistance.toString(),
-                  style: txtTheme.bodySmall),
             ]))
           ]),
     );
@@ -233,18 +236,21 @@ class GyroAxisData extends StatelessWidget {
           children: [
             Center(
               child: SizedBox(
-                height: 150,
+                height: 80,
                 width: 150,
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    RotationGuage(
-                        label: 'x-axis',
-                        color1: themeColor1,
-                        color2: themeColor2,
-                        value: xAxis),
-                    const SizedBox(height: 5),
+                    SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: RotationGuage(
+                          color1: themeColor1,
+                          color2: themeColor2,
+                          value: xAxis),
+                    ),
+                    const SizedBox(width: 5),
                     const Text('x-axis')
                   ],
                 ),
@@ -252,18 +258,21 @@ class GyroAxisData extends StatelessWidget {
             ),
             Center(
               child: SizedBox(
-                height: 150,
+                height: 80,
                 width: 150,
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    RotationGuage(
-                        label: 'y-axis',
-                        color1: themeColor1,
-                        color2: themeColor2,
-                        value: yAxis),
-                    const SizedBox(height: 5),
+                    SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: RotationGuage(
+                          color1: themeColor1,
+                          color2: themeColor2,
+                          value: yAxis),
+                    ),
+                    const SizedBox(width: 5),
                     const Text('y-axis')
                   ],
                 ),
@@ -271,24 +280,78 @@ class GyroAxisData extends StatelessWidget {
             ),
             Center(
               child: SizedBox(
-                height: 150,
+                height: 80,
                 width: 150,
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    RotationGuage(
-                        label: 'z-axis',
-                        color1: themeColor1,
-                        color2: themeColor2,
-                        value: zAxis),
-                    const SizedBox(height: 5),
+                    SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: RotationGuage(
+                          color1: themeColor1,
+                          color2: themeColor2,
+                          value: zAxis),
+                    ),
+                    const SizedBox(width: 5),
                     const Text('x-axis')
                   ],
                 ),
               ),
             ),
           ]),
+    );
+  }
+}
+
+class AtmosData extends StatelessWidget {
+  final String temp;
+  final String humidity;
+  const AtmosData({Key? key, required this.temp, required this.humidity})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final txtTheme = Theme.of(context).textTheme;
+    return Row(
+      children: [
+        RichText(
+          text: TextSpan(children: [
+            TextSpan(text: temp, style: txtTheme.displayMedium),
+            WidgetSpan(
+              child: Transform.translate(
+                offset: const Offset(4, -20),
+                child: Text(
+                  'o',
+                  //superscript is usually smaller in size
+                  textScaleFactor: 0.7,
+                  style: txtTheme.bodyMedium,
+                ),
+              ),
+            ),
+            TextSpan(text: '  temp', style: txtTheme.bodySmall),
+          ]),
+        ),
+        SizedBox(width: 30),
+        RichText(
+          text: TextSpan(children: [
+            TextSpan(text: humidity, style: txtTheme.displayMedium),
+            WidgetSpan(
+              child: Transform.translate(
+                offset: const Offset(4, -20),
+                child: Text(
+                  'o',
+                  //superscript is usually smaller in size
+                  textScaleFactor: 0.7,
+                  style: txtTheme.bodyMedium,
+                ),
+              ),
+            ),
+            TextSpan(text: '  humidity', style: txtTheme.bodySmall),
+          ]),
+        ),
+      ],
     );
   }
 }

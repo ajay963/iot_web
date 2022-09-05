@@ -8,14 +8,13 @@ class RotationGuage extends StatelessWidget {
   final Color color1;
   final Color color2;
   final int value;
-  final String label;
-  const RotationGuage(
-      {Key? key,
-      required this.color1,
-      required this.color2,
-      required this.value,
-      required this.label})
-      : super(key: key);
+
+  const RotationGuage({
+    Key? key,
+    required this.color1,
+    required this.color2,
+    required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,40 +29,49 @@ class RotationGuage extends StatelessWidget {
             endAngle: 270,
             showTicks: false,
             showLabels: false,
-            radiusFactor: 0.68,
+            radiusFactor: 0.7,
             annotations: <GaugeAnnotation>[
               GaugeAnnotation(
-                angle: -270,
-                positionFactor: 0.2,
-                widget: Text(
-                  label,
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              )
+                  angle: -270,
+                  positionFactor: 0.2,
+                  widget: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: value.toString(),
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                      WidgetSpan(
+                        child: Transform.translate(
+                          offset: const Offset(2, -4),
+                          child: const Text(
+                            'o',
+                            //superscript is usually smaller in size
+                            textScaleFactor: 0.7,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      )
+                    ]),
+                  ))
             ],
             ranges: [
               GaugeRange(
                 startValue: 0,
                 endValue: 100,
+                startWidth: 6,
+                endWidth: 6,
                 color: Colors.white.withOpacity(0.2),
               ),
             ],
             pointers: [
               RangePointer(
                 value: value.toDouble(),
-                cornerStyle: CornerStyle.bothCurve,
                 enableAnimation: true,
-                width: 10,
+                width: 6,
                 color: Colors.white,
-                gradient: SweepGradient(colors: [color1, color2]),
-              ),
-              MarkerPointer(
-                value: value.toDouble(),
-                enableAnimation: true,
-                markerHeight: 8,
-                markerWidth: 8,
-                color: Colors.white.withOpacity(0.6),
-                markerType: MarkerType.circle,
+                gradient:
+                    SweepGradient(colors: [color1.withOpacity(0), color2]),
               ),
             ],
           ),
@@ -90,7 +98,7 @@ class DashRadialSpeedGauge extends StatelessWidget {
       axes: <RadialAxis>[
         RadialAxis(
           startAngle: -270,
-          endAngle: 160,
+          endAngle: 270,
           minimum: 0,
           maximum: 50,
           showFirstLabel: false,
@@ -98,8 +106,8 @@ class DashRadialSpeedGauge extends StatelessWidget {
           showTicks: false,
           annotations: <GaugeAnnotation>[
             GaugeAnnotation(
-                angle: -270,
-                positionFactor: 0,
+                angle: 0,
+                positionFactor: 0.1,
                 widget: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(children: [
@@ -109,34 +117,60 @@ class DashRadialSpeedGauge extends StatelessWidget {
                     ),
                     TextSpan(
                       text: '\nkmph',
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     )
                   ]),
                 ))
           ],
-          axisLineStyle: const AxisLineStyle(
-              thicknessUnit: GaugeSizeUnit.factor,
-              thickness: 0.2,
-              color: kMdGrey,
-              dashArray: <double>[10, 15]),
+          axisLineStyle: AxisLineStyle(
+            thicknessUnit: GaugeSizeUnit.factor,
+            thickness: 0.15,
+            color: Colors.black.withOpacity(0.4),
+          ),
+          pointers: [
+            RangePointer(
+              value: value.toDouble(),
+              // cornerStyle: CornerStyle.bothCurve,
+              enableAnimation: true,
+              width: 8,
+              pointerOffset: -10,
+
+              gradient: SweepGradient(colors: [color1.withAlpha(0), color2]),
+            ),
+          ],
         ),
         RadialAxis(
-            startAngle: -270,
-            endAngle: -90,
-            minimum: 0,
-            maximum: 50,
-            showFirstLabel: false,
-            showLabels: false,
-            showTicks: false,
-            axisLineStyle: AxisLineStyle(
-              thicknessUnit: GaugeSizeUnit.factor,
-              thickness: 0.2,
-              dashArray: const <double>[10, 15],
-              color: Colors.white,
-              gradient: SweepGradient(
-                colors: <Color>[color1, color2],
-              ),
-            )),
+          startAngle: -270,
+          endAngle: 270,
+          minimum: 0,
+          maximum: 50,
+          showFirstLabel: false,
+          showLabels: false,
+          showTicks: false,
+          radiusFactor: 1.1,
+          axisLineStyle: AxisLineStyle(
+            thicknessUnit: GaugeSizeUnit.factor,
+            thickness: 0.15,
+            color: Colors.black.withOpacity(0),
+          ),
+          pointers: [
+            NeedlePointer(
+                needleLength: 3,
+                value: value.toDouble(),
+                needleStartWidth: 4,
+                needleEndWidth: 6,
+                enableAnimation: true,
+                animationDuration: 1300,
+                gradient: const LinearGradient(
+                  colors: [Colors.white, Colors.transparent],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                knobStyle: const KnobStyle(
+                  knobRadius: 0,
+                ))
+          ],
+        )
       ],
     );
   }

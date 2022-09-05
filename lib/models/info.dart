@@ -4,17 +4,12 @@ class ControlData {
   final int xPos;
   final int yPos;
   final bool isActive;
-  final int red;
-  final int green;
-  final int blue;
-
+  final RGBled rgbLED;
   ControlData({
     required this.xPos,
     required this.yPos,
     required this.isActive,
-    required this.red,
-    required this.green,
-    required this.blue,
+    required this.rgbLED,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,9 +17,7 @@ class ControlData {
       'xPos': xPos,
       'yPos': yPos,
       'isActive': isActive,
-      'red': red,
-      'green': green,
-      'blue': blue,
+      'rgbLED': rgbLED.toMap(),
     };
   }
 
@@ -33,9 +26,7 @@ class ControlData {
       xPos: map['xPos']?.toInt() ?? 0,
       yPos: map['yPos']?.toInt() ?? 0,
       isActive: map['isActive'] ?? false,
-      red: map['red']?.toInt() ?? 0,
-      green: map['green']?.toInt() ?? 0,
-      blue: map['blue']?.toInt() ?? 0,
+      rgbLED: RGBled.fromMap(map['rgbLED']),
     );
   }
 
@@ -43,4 +34,35 @@ class ControlData {
 
   factory ControlData.fromJson(String source) =>
       ControlData.fromMap(json.decode(source));
+}
+
+class RGBled {
+  final int red;
+  final int blue;
+  final int green;
+  RGBled({
+    required this.red,
+    required this.blue,
+    required this.green,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'red': red,
+      'blue': blue,
+      'green': green,
+    };
+  }
+
+  factory RGBled.fromMap(Map<String, dynamic> map) {
+    return RGBled(
+      red: map['red']?.toInt() ?? 0,
+      blue: map['blue']?.toInt() ?? 0,
+      green: map['green']?.toInt() ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RGBled.fromJson(String source) => RGBled.fromMap(json.decode(source));
 }

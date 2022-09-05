@@ -74,6 +74,11 @@ class Themeing extends ChangeNotifier {
     primaryColor: primaryColor,
     backgroundColor: Colors.black,
     textTheme: TextTheme(
+      displayMedium: TextStyle(
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 36,
+          fontWeight: FontWeight.w500,
+          color: Colors.white),
       bodyLarge: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
@@ -82,15 +87,14 @@ class Themeing extends ChangeNotifier {
       bodyMedium: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
-          letterSpacing: 1.5,
           fontWeight: FontWeight.w500,
-          color: kLtGrey),
+          color: kTxtWhite),
       bodySmall: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 16,
           letterSpacing: 1.5,
           fontWeight: FontWeight.w500,
-          color: kTxtWhite),
+          color: kLtGrey),
       labelLarge: TextStyle(
           fontFamily: GoogleFonts.roboto().fontFamily,
           fontSize: 24,
