@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:iot/models/info.dart';
 import 'package:iot/models/temp.dart';
 import 'package:iot/provider/sensors_data.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -19,12 +21,16 @@ class WebSocketDesktop extends StatefulWidget {
 }
 
 class _WebSocketDesktop extends State<WebSocketDesktop> {
-  late bool ledstatus;
+  bool ledstatus = false;
   late IOWebSocketChannel channel;
-  late bool connected;
-  late String temp;
-  late String humidity;
-  late String heatindex;
+  bool connected = false;
+  int temp = 0;
+  int humidity = 0;
+
+  // rgb value
+  int red = 0;
+  int blue = 0;
+  int green = 0;
   int idx = 0;
   late List<TempChartData> tempList = [
     TempChartData(time: 0, temp: 0),
@@ -33,9 +39,9 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
   void initState() {
     ledstatus = false;
     connected = false;
-    temp = "0";
-    humidity = "0";
-    heatindex = "0";
+    temp = 0;
+    humidity = 0;
+
     Timer.periodic(const Duration(seconds: 1), updateGraph);
     Future.delayed(Duration.zero, () async {
       channelconnect(); //connect to WebSocket wth NodeMCU
@@ -45,9 +51,8 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
 
   void updateGraph(Timer time) {
     setState(() {
-      tempList
-          .add(TempChartData(time: idx.toDouble(), temp: double.parse(temp)));
-      idx = idx + 10;
+      tempList.add(TempChartData(time: idx.toDouble(), temp: temp.toDouble()));
+      idx = idx + 1;
       if (tempList.length > 11) tempList.removeAt(0);
     });
   }
@@ -58,52 +63,44 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
           IOWebSocketChannel.connect("ws://192.168.4.1:81"); //channel IP : Port
       channel.stream.listen(
         (message) {
-          print(message);
+          debugPrint(message);
           setState(() {
-            if (message == "connected") {
-              connected = true;
-            } else if (message.substring(0, 6) == "{'temp") {
-              message = message.replaceAll(RegExp("'"), '"');
-
-              Map<String, dynamic> jsondata = json.decode(message);
-              setState(() {
-                temp = jsondata["temp"];
-                humidity = jsondata["humidity"];
-                heatindex = jsondata["heat"];
-              });
-            } else if (message == "poweron:success") {
-              ledstatus = true;
-            } else if (message == "poweroff:success") {
-              ledstatus = false;
-            }
+            connected = true;
+            Map<String, dynamic> jsondata = json.decode(message);
+            setState(() {
+              temp = jsondata["temp"];
+              humidity = jsondata["humidity"];
+            });
           });
         },
         onDone: () {
           //if WebSocket is disconnected
-          print("Web socket is closed");
+          debugPrint("Web socket is closed");
           setState(() {
             connected = false;
           });
         },
         onError: (error) {
-          print("error" + error.toString());
+          debugPrint("error" + error.toString());
         },
       );
     } catch (_) {
-      print("error on connecting to websocket.");
+      debugPrint("error on connecting to websocket.");
     }
+  }
+
+  String rgbJson({required int red, required int blue, required int green}) {
+    setState(() {});
+    return RGBled(red: red, blue: blue, green: green).toJson();
   }
 
   Future<void> sendcmd(String cmd) async {
     if (connected == true) {
-      if (ledstatus == false && cmd != "poweron" && cmd != "poweroff") {
-        print("Send the valid command");
-      } else {
-        channel.sink.add(cmd); //sending Command to NodeMCU
-      }
+      log(cmd);
+      channel.sink.add(cmd); //sending Command to NodeMCU
     } else {
       channelconnect();
-      print("Websocket is not connected.");
+      debugPrint("Websocket is not connected.");
     }
   }
 
@@ -111,76 +108,114 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
   Widget build(BuildContext context) {
     final _tempSensorData = Provider.of<TempData>(context);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SizedBox(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              WindowTitleBarBox(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.purple,
-                  child: MoveWindow(
-                    child: const Center(
-                      child: Text(
-                        'ESP32-Flutter',
-                        textAlign: TextAlign.left,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SizedBox(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WindowTitleBarBox(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.purple,
+                    child: MoveWindow(
+                      child: const Center(
+                        child: Text(
+                          'ESP32-Flutter',
+                          textAlign: TextAlign.left,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Temperature $temp°C | Humidity: $humidity",
-                    ),
-                    const SizedBox(height: 10),
-                    Text("Heat Index: $heatindex°C"),
-                    const SizedBox(height: 10),
-                    Text("timer : " + idx.toString()),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 200,
-                      // width: 400,
-                      child: Charts(
-                        tempList: tempList,
-                        xAisLabel: 'Time',
-                        yAxisLabel: 'Temp',
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Temperature $temp°C | Humidity: $humidity",
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                        child: connected
-                            ? const Text("WEBSOCKET: CONNECTED")
-                            : const Text("DISCONNECTED")),
-                    Container(
-                        child: ledstatus
-                            ? const Text("LED IS: ON")
-                            : const Text("LED IS: OFF")),
-                    const SizedBox(height: 30),
-                    RoundedButton(
-                      onTap: () {
-                        if (ledstatus) {
-                          sendcmd("poweroff");
-                          ledstatus = false;
-                        } else {
-                          sendcmd("poweron");
-                          ledstatus = true;
-                        }
-                        setState(() {});
-                      },
-                      buttonLabel: ledstatus ? "TURN LED OFF" : "TURN LED ON",
-                    )
-                  ],
-                ),
-              )
-            ]),
+                      const SizedBox(height: 10),
+                      Text("timer : " + idx.toString()),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 200,
+                        // width: 400,
+                        child: Charts(
+                          tempList: tempList,
+                          xAisLabel: 'Time',
+                          yAxisLabel: 'Temp',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                          child: connected
+                              ? const Text("WEBSOCKET: CONNECTED")
+                              : const Text("DISCONNECTED")),
+                      Container(
+                          child: ledstatus
+                              ? const Text("LED IS: ON")
+                              : const Text("LED IS: OFF")),
+                      const SizedBox(height: 30),
+                      Slider(
+                          value: red.toDouble(),
+                          min: 0,
+                          max: 255,
+                          thumbColor: Colors.red,
+                          activeColor: Colors.red.shade400,
+                          inactiveColor: Colors.red.shade100,
+                          onChanged: (double value) {
+                            red = value.toInt();
+                            setState(() {});
+                          },
+                          onChangeEnd: (rValue) {
+                            red = rValue.toInt();
+                            sendcmd(
+                                rgbJson(red: red, blue: blue, green: green));
+                          }),
+                      const SizedBox(height: 30),
+                      Slider(
+                        value: blue.toDouble(),
+                        min: 0,
+                        max: 255,
+                        thumbColor: Colors.blue,
+                        activeColor: Colors.blue.shade400,
+                        inactiveColor: Colors.blue.shade100,
+                        onChangeEnd: (bValue) {
+                          blue = bValue.toInt();
+                          sendcmd(rgbJson(red: red, blue: blue, green: green));
+                        },
+                        onChanged: (double value) {
+                          blue = value.toInt();
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 30),
+                      Slider(
+                          value: green.toDouble(),
+                          min: 0,
+                          max: 255,
+                          thumbColor: Colors.green,
+                          activeColor: Colors.green.shade400,
+                          inactiveColor: Colors.green.shade100,
+                          onChanged: (double value) {
+                            green = value.toInt();
+                            setState(() {});
+                          },
+                          onChangeEnd: (gValue) {
+                            green = gValue.toInt();
+                            sendcmd(
+                                rgbJson(red: red, blue: blue, green: green));
+                          }),
+                    ],
+                  ),
+                )
+              ]),
+        ),
       ),
     );
   }

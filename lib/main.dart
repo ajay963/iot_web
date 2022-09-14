@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:iot/websocket.dart';
 import 'package:iot/widgets/desktop_layout.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -20,28 +24,30 @@ import 'package:rive/rive.dart' as rive;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final cachedAnimation = await RiveAvatar.cachedAnimation;
   // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(MyApp(artboard: cachedAnimation.artboardByName('SPACE')));
-  await Window.initialize();
   WidgetsBinding.instance.addPostFrameCallback((_) {});
-  doWhenWindowReady(() {
-    const initialSize = Size(900, 550);
-    // const maxSize = Size(1080, 720);
-    appWindow.size = initialSize;
-    appWindow.minSize = initialSize;
-    appWindow.maxSize = initialSize;
-    appWindow.title = "Flutter ESP-IOT";
-    appWindow.alignment = Alignment.center;
 
-    appWindow.show();
-  });
+  await Window.initialize();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    doWhenWindowReady(() {
+      const initialSize = Size(900, 680);
+      // const maxSize = Size(1080, 720);
+      appWindow.size = initialSize;
+      appWindow.minSize = initialSize;
+      appWindow.maxSize = initialSize;
+      appWindow.title = "Flutter ESP-IOT";
+      appWindow.alignment = Alignment.center;
+
+      appWindow.show();
+    });
+  }
   await Window.setEffect(
     effect: WindowEffect.aero,
     color: const Color(0xaa000000),
   );
+  runApp(MyApp(artboard: cachedAnimation.artboardByName('SPACE')));
 }
 
 class MyApp extends StatelessWidget {
@@ -63,17 +69,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
       ],
       child: MaterialApp(
-          theme: Themeing.darkTheme,
-          color: Colors.transparent,
-          themeMode: ThemeMode.dark,
-          debugShowCheckedModeBanner: false,
-          home: DesktopSingleView(
-            title: 'Flutter ESP-32',
-            bottomPannel: Container(
-              color: Colors.black.withOpacity(0.4),
-              child: const SensorMonitorPannel(),
-            ),
-          )),
+        theme: Themeing.darkTheme,
+        color: Colors.transparent,
+        themeMode: ThemeMode.dark,
+        debugShowCheckedModeBanner: false,
+        home: const WebSocketDesktop(),
+
+        // DesktopSingleView(
+        //   title: 'Flutter ESP-32',
+        //   bottomPannel: Container(
+        //     color: Colors.black.withOpacity(0.4),
+        //     child: const WebSocketDesktop(),
+        //   ),
+        // )
+      ),
     );
   }
 }
