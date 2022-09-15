@@ -18,8 +18,6 @@ class IncomingDataController extends GetxController {
       channel = IOWebSocketChannel.connect("ws://192.168.4.1:81");
       channel.stream.listen((incomingData) {
         if (incomingData == "connected") {
-          isConnected.value = true;
-        } else if (incomingData.substring(0, 6) == "{'temp") {
           atmosData.value = AtmosDataModel.fromJson(incomingData);
         }
       }, onDone: () {
