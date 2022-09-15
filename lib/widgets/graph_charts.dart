@@ -6,13 +6,16 @@ import '../models/temp.dart';
 const Color shade1 = Color(0xff23b6e6);
 const Color shade2 = Color(0xff02d39a);
 
+const Color orgShade1 = Color(0xffF12711);
+const Color orgShade2 = Color(0xffF5AF19);
+
 class Charts extends StatelessWidget {
-  final List<TempChartData> tempList;
+  final List<TempChartData> list;
   final String xAisLabel;
   final String yAxisLabel;
   const Charts(
       {Key? key,
-      required this.tempList,
+      required this.list,
       required this.xAisLabel,
       required this.yAxisLabel})
       : super(key: key);
@@ -22,19 +25,19 @@ class Charts extends StatelessWidget {
     return SfCartesianChart(
       series: <ChartSeries>[
         AreaSeries<TempChartData, double>(
-          dataSource: tempList,
+          dataSource: list,
           xAxisName: xAisLabel,
           yAxisName: yAxisLabel,
-          borderWidth: 3,
+          borderWidth: 2,
           borderGradient: const LinearGradient(
-            colors: [shade1, shade2],
+            colors: [orgShade1, orgShade2],
             begin: Alignment.topLeft,
             end: Alignment.topRight,
           ),
           gradient: LinearGradient(
-            colors: [shade1.withOpacity(0.3), shade2.withOpacity(0.3)],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
+            colors: [orgShade1.withOpacity(0.3), orgShade2.withOpacity(0.3)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
           xValueMapper: (TempChartData tempData, _) => tempData.time,
           yValueMapper: (TempChartData tempData, _) => tempData.temp,

@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iot/models/info.dart';
 import 'package:iot/models/temp.dart';
 import 'package:iot/provider/sensors_data.dart';
 import 'package:iot/widgets/buttos.dart';
 import 'package:iot/widgets/graph_charts.dart';
+import 'package:iot/widgets/sliders.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+
+import 'layouts/desktop_monitor.dart';
 
 class WebSocketDesktop extends StatefulWidget {
   const WebSocketDesktop({Key? key}) : super(key: key);
@@ -35,6 +39,9 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
   late List<TempChartData> tempList = [
     TempChartData(time: 0, temp: 0),
   ];
+  late List<TempChartData> humidityList = [
+    TempChartData(time: 0, temp: 0),
+  ];
   @override
   void initState() {
     ledstatus = false;
@@ -53,6 +60,11 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
     setState(() {
       tempList.add(TempChartData(time: idx.toDouble(), temp: temp.toDouble()));
       idx = idx + 1;
+
+      humidityList
+          .add(TempChartData(time: idx.toDouble(), temp: humidity.toDouble()));
+      idx = idx + 1;
+      if (humidityList.length > 11) humidityList.removeAt(0);
       if (tempList.length > 11) tempList.removeAt(0);
     });
   }
@@ -70,6 +82,10 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
             setState(() {
               temp = jsondata["temp"];
               humidity = jsondata["humidity"];
+
+              if (temp > 87) temp = 86;
+              if (temp < 0) temp = 0;
+              if (humidity > 206) humidity = 208;
             });
           });
         },
@@ -100,121 +116,138 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
       channel.sink.add(cmd); //sending Command to NodeMCU
     } else {
       channelconnect();
+      log(cmd);
       debugPrint("Websocket is not connected.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _tempSensorData = Provider.of<TempData>(context);
-
+    final TextTheme txtTheme = Theme.of(context).textTheme;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SizedBox(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WindowTitleBarBox(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.purple,
-                    child: MoveWindow(
-                      child: const Center(
-                        child: Text(
-                          'ESP32-Flutter',
-                          textAlign: TextAlign.left,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 30),
+                        Text(
+                          'Weather \nMania',
+                          style: txtTheme.displayMedium,
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        Container(
+                            child: connected
+                                ? const Text("Websocket: Connected")
+                                : const Text("Websocket: Disconnected")),
+                        const SizedBox(height: 30),
+                        AtmosData(
+                            temp: temp.toString(),
+                            humidity: humidity.toString()),
+                        const SizedBox(height: 10),
+                        Text("timer : " + idx.toString()),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Temperature",
+                          style: txtTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 140,
+                          // width: 400,
+                          child: Charts(
+                            list: tempList,
+                            xAisLabel: 'Time',
+                            yAxisLabel: 'Temp',
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Humidity",
+                          style: txtTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 140,
+                          // width: 400,
+                          child: Charts(
+                            list: humidityList,
+                            xAisLabel: 'Time',
+                            yAxisLabel: 'Humidity',
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Text(
+                          "RGB slider",
+                          style: txtTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 30),
+                        SliderWidget(
+                            value: red,
+                            min: 0,
+                            max: 255,
+                            fullWidth: true,
+                            colorsList: const [
+                              Colors.orange,
+                              Colors.red,
+                            ],
+                            onChanged: (value) {
+                              red = value.toInt();
+                              setState(() {});
+                            },
+                            onChangeEnd: (rValue) {
+                              red = rValue.toInt();
+                              sendcmd(
+                                  rgbJson(red: red, blue: blue, green: green));
+                            }),
+                        const SizedBox(height: 20),
+                        SliderWidget(
+                          value: blue,
+                          min: 0,
+                          max: 255,
+                          fullWidth: true,
+                          colorsList: const [Colors.cyan, Colors.blue],
+                          onChanged: (value) {
+                            blue = value.toInt();
+                            setState(() {});
+                          },
+                          onChangeEnd: (bValue) {
+                            blue = bValue.toInt();
+                            sendcmd(
+                                rgbJson(red: red, blue: blue, green: green));
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        SliderWidget(
+                            value: green,
+                            min: 0,
+                            max: 255,
+                            fullWidth: true,
+                            colorsList: const [Colors.teal, Colors.green],
+                            onChanged: (value) {
+                              green = value.toInt();
+                              setState(() {});
+                            },
+                            onChangeEnd: (gValue) {
+                              green = gValue.toInt();
+                              sendcmd(
+                                  rgbJson(red: red, blue: blue, green: green));
+                            }),
+                      ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Temperature $temp°C | Humidity: $humidity",
-                      ),
-                      const SizedBox(height: 10),
-                      Text("timer : " + idx.toString()),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 200,
-                        // width: 400,
-                        child: Charts(
-                          tempList: tempList,
-                          xAisLabel: 'Time',
-                          yAxisLabel: 'Temp',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                          child: connected
-                              ? const Text("WEBSOCKET: CONNECTED")
-                              : const Text("DISCONNECTED")),
-                      Container(
-                          child: ledstatus
-                              ? const Text("LED IS: ON")
-                              : const Text("LED IS: OFF")),
-                      const SizedBox(height: 30),
-                      Slider(
-                          value: red.toDouble(),
-                          min: 0,
-                          max: 255,
-                          thumbColor: Colors.red,
-                          activeColor: Colors.red.shade400,
-                          inactiveColor: Colors.red.shade100,
-                          onChanged: (double value) {
-                            red = value.toInt();
-                            setState(() {});
-                          },
-                          onChangeEnd: (rValue) {
-                            red = rValue.toInt();
-                            sendcmd(
-                                rgbJson(red: red, blue: blue, green: green));
-                          }),
-                      const SizedBox(height: 30),
-                      Slider(
-                        value: blue.toDouble(),
-                        min: 0,
-                        max: 255,
-                        thumbColor: Colors.blue,
-                        activeColor: Colors.blue.shade400,
-                        inactiveColor: Colors.blue.shade100,
-                        onChangeEnd: (bValue) {
-                          blue = bValue.toInt();
-                          sendcmd(rgbJson(red: red, blue: blue, green: green));
-                        },
-                        onChanged: (double value) {
-                          blue = value.toInt();
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      Slider(
-                          value: green.toDouble(),
-                          min: 0,
-                          max: 255,
-                          thumbColor: Colors.green,
-                          activeColor: Colors.green.shade400,
-                          inactiveColor: Colors.green.shade100,
-                          onChanged: (double value) {
-                            green = value.toInt();
-                            setState(() {});
-                          },
-                          onChangeEnd: (gValue) {
-                            green = gValue.toInt();
-                            sendcmd(
-                                rgbJson(red: red, blue: blue, green: green));
-                          }),
-                    ],
-                  ),
-                )
-              ]),
+                  )
+                ]),
+          ),
         ),
       ),
     );

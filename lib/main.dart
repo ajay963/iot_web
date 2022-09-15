@@ -25,8 +25,8 @@ import 'package:rive/rive.dart' as rive;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cachedAnimation = await RiveAvatar.cachedAnimation;
-  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   WidgetsBinding.instance.addPostFrameCallback((_) {});
 
   await Window.initialize();
@@ -73,7 +73,8 @@ class MyApp extends StatelessWidget {
         color: Colors.transparent,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: const WebSocketDesktop(),
+        home: const DesktopSingleView(
+            title: 'Flutter-ESP32', bottomPannel: WebSocketDesktop()),
 
         // DesktopSingleView(
         //   title: 'Flutter ESP-32',
