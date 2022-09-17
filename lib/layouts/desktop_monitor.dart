@@ -45,8 +45,8 @@ class _SensorMonitorPannel extends State<SensorMonitorPannel> {
   // ultra sonic data
   late int collisionDistance;
 
-  late List<TempChartData> tempList = [
-    TempChartData(time: 0, temp: 0),
+  late List<GraphData> tempList = [
+    GraphData(time: 0, value: 0),
   ];
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _SensorMonitorPannel extends State<SensorMonitorPannel> {
   void updateGraph(Timer time) {
     setState(() {
       tempList
-          .add(TempChartData(time: timer.toDouble(), temp: double.parse(temp)));
+          .add(GraphData(time: timer.toDouble(), value: double.parse(temp)));
       timer++;
       if (tempList.length > 11) tempList.removeAt(0);
     });

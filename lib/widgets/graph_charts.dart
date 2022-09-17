@@ -10,7 +10,7 @@ const Color orgShade1 = Color(0xffF12711);
 const Color orgShade2 = Color(0xffF5AF19);
 
 class Charts extends StatelessWidget {
-  final List<TempChartData> list;
+  final List<GraphData> list;
   final String xAisLabel;
   final String yAxisLabel;
   const Charts(
@@ -24,7 +24,7 @@ class Charts extends StatelessWidget {
   Widget build(BuildContext context) {
     return SfCartesianChart(
       series: <ChartSeries>[
-        AreaSeries<TempChartData, double>(
+        AreaSeries<GraphData, double>(
           dataSource: list,
           xAxisName: xAisLabel,
           yAxisName: yAxisLabel,
@@ -39,8 +39,8 @@ class Charts extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-          xValueMapper: (TempChartData tempData, _) => tempData.time,
-          yValueMapper: (TempChartData tempData, _) => tempData.temp,
+          xValueMapper: (GraphData data, _) => data.time,
+          yValueMapper: (GraphData data, _) => data.value,
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iot/provider/colors_list.dart';
 
 class SliderWidget extends StatefulWidget {
   final double sliderHeight;
@@ -80,6 +81,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                     trackHeight: 4.0,
                     thumbShape: CustomSliderThumbCircle(
                       thumbRadius: widget.sliderHeight * .4,
+                      labelColor: widget.colorsList.last,
                       min: widget.min,
                       max: widget.max,
                     ),
@@ -122,12 +124,14 @@ class _SliderWidgetState extends State<SliderWidget> {
 }
 
 class CustomSliderThumbCircle extends SliderComponentShape {
+  final Color labelColor;
   final double thumbRadius;
   final int min;
   final int max;
 
   const CustomSliderThumbCircle({
     required this.thumbRadius,
+    required this.labelColor,
     this.min = 0,
     this.max = 10,
   });
@@ -162,7 +166,7 @@ class CustomSliderThumbCircle extends SliderComponentShape {
       style: TextStyle(
         fontSize: thumbRadius * .8,
         fontWeight: FontWeight.w700,
-        color: sliderTheme.thumbColor, //Text Color of Value on Thumb
+        color: labelColor, //Text Color of Value on Thumb
       ),
       text: getValue(value),
     );

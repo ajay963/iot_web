@@ -37,9 +37,9 @@ class ControlData {
 }
 
 class RGBled {
-  final int red;
-  final int blue;
-  final int green;
+  int red;
+  int blue;
+  int green;
   RGBled({
     required this.red,
     required this.blue,

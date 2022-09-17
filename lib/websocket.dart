@@ -1,20 +1,171 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iot/controller/websocket_controller.dart';
 import 'package:iot/models/info.dart';
 import 'package:iot/models/temp.dart';
-import 'package:iot/provider/sensors_data.dart';
-import 'package:iot/widgets/buttos.dart';
 import 'package:iot/widgets/graph_charts.dart';
 import 'package:iot/widgets/sliders.dart';
-import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-
 import 'layouts/desktop_monitor.dart';
 
+class WebsocketMobile extends StatelessWidget {
+  WebsocketMobile({Key? key}) : super(key: key);
+
+  final IncomingDataController data = Get.put(IncomingDataController());
+
+  @override
+  Widget build(BuildContext context) {
+    String rgbJson({required int red, required int blue, required int green}) {
+      return RGBled(red: red, blue: blue, green: green).toJson();
+    }
+
+    final TextTheme txtTheme = Theme.of(context).textTheme;
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor:
+            (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                ? Colors.transparent
+                : Colors.black,
+        body: SizedBox(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: GetBuilder<IncomingDataController>(builder: (incomingData) {
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 30),
+                          Text(
+                            'Weather \nMania',
+                            style: txtTheme.displayMedium,
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                              child: incomingData.isConnected.value
+                                  ? const Text("Websocket: Connected")
+                                  : const Text("Websocket: Disconnected")),
+                          const SizedBox(height: 30),
+                          AtmosData(
+                            temp: incomingData.atmosData.value.temp.toString(),
+                            humidity: incomingData.atmosData.value.humidity
+                                .toString(),
+                          ),
+                          const SizedBox(height: 10),
+                          Text("timer : " + incomingData.idx.toString()),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Temperature",
+                            style: txtTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 140,
+                            // width: 400,
+                            child: Charts(
+                              list: incomingData.tempList,
+                              xAisLabel: 'Time',
+                              yAxisLabel: 'Temp',
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Humidity",
+                            style: txtTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 140,
+                            // width: 400,
+                            child: Charts(
+                              list: incomingData.humidityList,
+                              xAisLabel: 'Time',
+                              yAxisLabel: 'Humidity',
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Text(
+                            "RGB slider",
+                            style: txtTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 30),
+                          SliderWidget(
+                              value: incomingData.rgbLed.value.red,
+                              min: 0,
+                              max: 255,
+                              fullWidth: true,
+                              colorsList: const [
+                                Colors.orange,
+                                Colors.red,
+                              ],
+                              onChanged: (value) {
+                                incomingData.setRed(data: value.toInt());
+                              },
+                              onChangeEnd: (rValue) {
+                                incomingData.rgbLed.value.red = rValue.toInt();
+                                incomingData.sendcmd(rgbJson(
+                                    red: incomingData.rgbLed.value.red,
+                                    blue: incomingData.rgbLed.value.blue,
+                                    green: incomingData.rgbLed.value.green));
+                              }),
+                          const SizedBox(height: 20),
+                          SliderWidget(
+                            value: incomingData.rgbLed.value.blue,
+                            min: 0,
+                            max: 255,
+                            fullWidth: true,
+                            colorsList: const [Colors.cyan, Colors.blue],
+                            onChanged: (value) {
+                              incomingData.setBlue(data: value.toInt());
+                            },
+                            onChangeEnd: (bValue) {
+                              incomingData.rgbLed.value.blue = bValue.toInt();
+                              incomingData.sendcmd(rgbJson(
+                                  red: incomingData.rgbLed.value.red,
+                                  blue: incomingData.rgbLed.value.blue,
+                                  green: incomingData.rgbLed.value.green));
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          SliderWidget(
+                              value: incomingData.rgbLed.value.green,
+                              min: 0,
+                              max: 255,
+                              fullWidth: true,
+                              colorsList: const [Colors.teal, Colors.green],
+                              onChanged: (value) {
+                                incomingData.setGreen(data: value.toInt());
+                              },
+                              onChangeEnd: (gValue) {
+                                incomingData.rgbLed.value.green =
+                                    gValue.toInt();
+                                incomingData.sendcmd(rgbJson(
+                                    red: incomingData.rgbLed.value.red,
+                                    blue: incomingData.rgbLed.value.blue,
+                                    green: incomingData.rgbLed.value.green));
+                              }),
+                        ],
+                      ),
+                    )
+                  ]);
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Abonded code
 class WebSocketDesktop extends StatefulWidget {
   const WebSocketDesktop({Key? key}) : super(key: key);
 
@@ -36,12 +187,8 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
   int blue = 0;
   int green = 0;
   int idx = 0;
-  late List<TempChartData> tempList = [
-    TempChartData(time: 0, temp: 0),
-  ];
-  late List<TempChartData> humidityList = [
-    TempChartData(time: 0, temp: 0),
-  ];
+  List<GraphData> tempList = [GraphData(time: 0, value: 0)];
+  List<GraphData> humidityList = [GraphData(time: 0, value: 0)];
   @override
   void initState() {
     ledstatus = false;
@@ -58,12 +205,12 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
 
   void updateGraph(Timer time) {
     setState(() {
-      tempList.add(TempChartData(time: idx.toDouble(), temp: temp.toDouble()));
+      tempList.add(GraphData(time: idx.toDouble(), value: temp.toDouble()));
       idx = idx + 1;
 
       humidityList
-          .add(TempChartData(time: idx.toDouble(), temp: humidity.toDouble()));
-      idx = idx + 1;
+          .add(GraphData(time: idx.toDouble(), value: humidity.toDouble()));
+
       if (humidityList.length > 11) humidityList.removeAt(0);
       if (tempList.length > 11) tempList.removeAt(0);
     });
@@ -126,7 +273,10 @@ class _WebSocketDesktop extends State<WebSocketDesktop> {
     final TextTheme txtTheme = Theme.of(context).textTheme;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor:
+            (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                ? Colors.transparent
+                : Colors.black,
         body: SizedBox(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

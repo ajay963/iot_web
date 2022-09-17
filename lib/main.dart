@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +29,8 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   WidgetsBinding.instance.addPostFrameCallback((_) {});
 
-  await Window.initialize();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await Window.initialize();
     doWhenWindowReady(() {
       const initialSize = Size(900, 680);
       // const maxSize = Size(1080, 720);
@@ -42,11 +42,12 @@ Future<void> main() async {
 
       appWindow.show();
     });
+    await Window.setEffect(
+      effect: WindowEffect.aero,
+      color: const Color(0xaa000000),
+    );
   }
-  await Window.setEffect(
-    effect: WindowEffect.aero,
-    color: const Color(0xaa000000),
-  );
+
   runApp(MyApp(artboard: cachedAnimation.artboardByName('SPACE')));
 }
 
@@ -68,13 +69,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
         ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         theme: Themeing.darkTheme,
-        color: Colors.transparent,
+        color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? Colors.transparent
+            : Colors.black,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: const DesktopSingleView(
-            title: 'Flutter-ESP32', bottomPannel: WebSocketDesktop()),
+        home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? DesktopSingleView(
+                title: 'Flutter-ESP32', bottomPannel: WebsocketMobile())
+            : WebsocketMobile(),
 
         // DesktopSingleView(
         //   title: 'Flutter ESP-32',

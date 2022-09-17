@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-class TempChartData {
-  TempChartData({required this.time, required this.temp});
-  final double temp;
+class GraphData {
+  GraphData({required this.time, required this.value});
+  final double value;
   final double time;
 }
 
 class AtmosDataModel {
-  final int temp;
-  final int humidity;
+  int temp;
+  int humidity;
   AtmosDataModel({
     required this.temp,
     required this.humidity,
