@@ -39,11 +39,11 @@ class IncomingDataController extends GetxController {
         },
         onDone: () {
           //if WebSocket is disconnected
-          debugPrint("Web socket is closed");
+          debugPrint("Websocket is closed");
           isConnected.value = false;
         },
         onError: (error) {
-          debugPrint("error" + error.toString());
+          // debugPrint("error" + error.toString());
         },
       );
     } catch (_) {
@@ -70,6 +70,7 @@ class IncomingDataController extends GetxController {
         time: idx.toDouble(), value: atmosData.value.humidity.toDouble()));
     if (humidityList.length > 11) humidityList.removeAt(0);
     if (tempList.length > 11) tempList.removeAt(0);
+    if (isConnected.value == false && idx % 10 == 0) channelconnect();
     update();
   }
 

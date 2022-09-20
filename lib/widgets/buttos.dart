@@ -63,10 +63,12 @@ class CustomRoudedButto extends StatelessWidget {
 class GradientButton extends StatelessWidget {
   final String itemLabel;
   final Function() onTap;
+  final List<Color> colors;
   const GradientButton({
     Key? key,
     required this.itemLabel,
     required this.onTap,
+    required this.colors,
   }) : super(key: key);
 
   @override
@@ -78,11 +80,18 @@ class GradientButton extends StatelessWidget {
       child: Ink(
         height: 40,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(itemLabel, style: _txtTheme.headline1),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Text(itemLabel,
+              style: _txtTheme.bodyMedium!
+                  .copyWith(fontSize: 28, fontWeight: FontWeight.w500)),
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
+          gradient: LinearGradient(
+            colors: colors,
+            begin: Alignment.topLeft,
+            end: Alignment.topRight,
+          ),
         ),
       ),
     );
