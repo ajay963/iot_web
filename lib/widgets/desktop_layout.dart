@@ -131,27 +131,27 @@ class DesktopSingleView extends StatelessWidget {
             color: Colors.black.withOpacity(0.2),
             child: MoveWindow(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: Row(
                   children: [
                     const SizedBox(width: 20),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: SizedBox(
-                        height: 24,
-                        width: 24,
+                        height: 20,
+                        width: 20,
                         child: Center(
                           child: Stack(
                             alignment: AlignmentDirectional.center,
                             children: [
                               Container(
-                                height: 24,
-                                width: 24,
+                                height: 20,
+                                width: 20,
                                 decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                   colors: [
-                                    Color(0xffff0844),
-                                    Color(0xffffb199),
+                                    Color(0xffFF0000),
+                                    Color(0xffFD7919),
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -172,20 +172,20 @@ class DesktopSingleView extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: SizedBox(
-                        height: 24,
-                        width: 24,
+                        height: 20,
+                        width: 20,
                         child: Center(
                           child: Stack(
                             alignment: AlignmentDirectional.center,
                             children: [
                               Container(
-                                height: 24,
-                                width: 24,
+                                height: 20,
+                                width: 20,
                                 decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                   colors: [
-                                    Color(0xff38f9d7),
-                                    Color(0xff43e97b),
+                                    Color(0xff00FF00),
+                                    Color(0xff1AECAD),
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -202,7 +202,7 @@ class DesktopSingleView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.3),
                     Text(
                       '  ' + title,
                       style: txtTheme.bodySmall,

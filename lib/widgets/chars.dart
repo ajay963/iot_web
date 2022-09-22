@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iot/controller/websocket_controller.dart';
+import 'package:iot/controller/temp_rgb_controller.dart';
 import 'package:iot/widgets/buttos.dart';
 
 class NoConenction extends StatelessWidget {

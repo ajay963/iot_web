@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:iot/websocket.dart';
+import 'package:iot/apps/temp_rgb.dart';
 import 'package:iot/widgets/desktop_layout.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/widgets/buttos.dart';
@@ -78,16 +78,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
             ? DesktopSingleView(
-                title: 'Flutter-ESP32', bottomPannel: WebsocketMobile())
-            : WebsocketMobile(),
-
-        // DesktopSingleView(
-        //   title: 'Flutter ESP-32',
-        //   bottomPannel: Container(
-        //     color: Colors.black.withOpacity(0.4),
-        //     child: const WebSocketDesktop(),
-        //   ),
-        // )
+                title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
+            : TempCumRGBApp(),
       ),
     );
   }

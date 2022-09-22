@@ -95,8 +95,8 @@ class __JoyStickControllerState extends State<_JoyStickController> {
 
   final JoystickMode _joystickMode = JoystickMode.all;
   void changePosistion(double xStep, double yStep) {
-    _x = xStep * 100;
-    _y = yStep * -100;
+    _x = xStep * 10;
+    _y = yStep * -10;
   }
 
   void resetPosistion() {
@@ -113,6 +113,8 @@ class __JoyStickControllerState extends State<_JoyStickController> {
 
     return Joystick(
       mode: _joystickMode,
+      // TODO  change listner frequency calling
+      period: const Duration(microseconds: 200),
       stick: Container(
         height: 25,
         width: 25,
