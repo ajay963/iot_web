@@ -24,6 +24,10 @@ it uses UDP datagram packets which is much much faster for live stream of data
 #include <ArduinoJson.h>
 #include <WebSocketsServer.h> //import for websocket
 #include <DHT.h> //library for DHT Sensor
+#include <SoftwareSerial.h>
+#include <TinyGPS++.h> // for gps 
+
+
 
 #define dhttype DHT11 //defining DHT Type
 
@@ -65,9 +69,9 @@ class LedBlink{
   void onDataIncoming(){}
 };
 
- int red = 200; 
- int blue = 150; 
- int green = 120; 
+ int red = 0; 
+ int blue = 0; 
+ int green = 0; 
 
 
 const char *ssid =  "ESP-32 Flutter";   //Wifi SSID (Name)   
@@ -75,10 +79,10 @@ const char *pass =  "strMG&&TP"; //wifi password
 bool isSet=false;
 String json; //variable for json 
 
-   int temp=0;
-   int hum=0;
+int temp=0;
+int hum=0;
 
-
+TinyGPSPlus gps; // gps object intilization
 DHT dht(4, dhttype); //initialize DHT sensor, D5 is the pin where we connect data pin from sensor
 
 WebSocketsServer webSocket = WebSocketsServer(81); //websocket init with port 81
@@ -91,6 +95,12 @@ void rgbLed(int r,int g,int b){
   analogWrite(ledpin2, g);
   analogWrite(ledpin3, b);
 }
+
+void gpsInfo(){
+if (gps.location.isValid()) {
+double latitude = (gps.location.lat());
+double longitude = (gps.location.lng());
+}}
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 //webscket event method
@@ -145,6 +155,45 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     }
 }
 
+// multithreading 
+// esp32 has dual cores - 0 , 1
+
+void networking_Task( void * parameters ){
+     while(true){
+      webSocket.loop(); 
+
+      StaticJsonDocument<200> data;
+      data["temp"] = temp;
+      data["humidity"] = hum;
+
+     
+        // Serial.println(data);
+        //formulate JSON string format from characters (Converted to string using chr2str())
+      String doc;
+      serializeJson(data, doc);
+      delay(100);
+      webSocket.broadcastTXT(doc); //send JSON to mobile
+    } 
+}
+
+void sensorData_Task( void * parameters ){
+     while(true){
+     if(!isSet){
+     delay(2000); //delay by 2 second, DHT sesor senses data slowly with delay around 2 seconds
+     isSet=true;
+     }
+    
+     hum =(int) dht.readHumidity(); //Humidity float value from DHT sensor
+     temp =(int) dht.readTemperature(); //Temperature float value from DHT sensor
+
+     if (isnan(hum) || isnan(temp)) {
+        //if data from DHT sensor is null
+        Serial.println(F("Failed to read from DHT sensor!"));
+        return;
+     }
+    } 
+}
+
 
 void setup() {
  
@@ -168,37 +217,13 @@ void setup() {
    webSocket.begin(); //websocket Begin
    webSocket.onEvent(webSocketEvent); //set Event for websocket
    Serial.println("Websocket is started");
+
+   // multithreading
+   xTaskCreatePinnedToCore(networking_Task, "networking task", 10000, NULL, 1, NULL,  1); 
+   xTaskCreatePinnedToCore(sensorData_Task, "sensor data reading task", 10000, NULL, 1, NULL,  0); 
 }
 
-void loop() {
-    webSocket.loop(); //keep this line on loop method
-    if(!isSet){
-    delay(2000); //delay by 2 second, DHT sesor senses data slowly with delay around 2 seconds
-    isSet=true;
-    }
-    
-    hum =(int) dht.readHumidity(); //Humidity float value from DHT sensor
-    temp =(int) dht.readTemperature(); //Temperature float value from DHT sensor
-
-    if (isnan(hum) || isnan(temp)) {
-        //if data from DHT sensor is null
-        Serial.println(F("Failed to read from DHT sensor!"));
-        return;
-    }else{
-    
-        StaticJsonDocument<200> data;
-        data["temp"] = temp;
-        data["humidity"] = hum;
-
-     
-        // Serial.println(data);
-        //formulate JSON string format from characters (Converted to string using chr2str())
-        String doc;
-        serializeJson(data, doc);
-        delay(200);
-        webSocket.broadcastTXT(doc); //send JSON to mobile
-    }
-}
-
+// by default void loop running on core 1
+void loop() {}
 
 
