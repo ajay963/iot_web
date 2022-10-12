@@ -2,8 +2,8 @@ import 'dart:convert';
 
 class GraphData {
   GraphData({required this.time, required this.value});
-  final double value;
-  final double time;
+  double value;
+  double time;
 }
 
 class AtmosDataModel {
@@ -71,17 +71,37 @@ class SensorInfo {
 }
 
 class GeoLocationData {
-  final double log;
-  final double lat;
+  double log;
+  double lat;
+  int seaLevel;
+  int satelliteNo;
   GeoLocationData({
     required this.log,
     required this.lat,
+    required this.seaLevel,
+    required this.satelliteNo,
   });
+
+  GeoLocationData copyWith({
+    double? log,
+    double? lat,
+    int? seaLevel,
+    int? satelliteNo,
+  }) {
+    return GeoLocationData(
+      log: log ?? this.log,
+      lat: lat ?? this.lat,
+      seaLevel: seaLevel ?? this.seaLevel,
+      satelliteNo: satelliteNo ?? this.satelliteNo,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
       'log': log,
       'lat': lat,
+      'seaLevel': seaLevel,
+      'satelliteNo': satelliteNo,
     };
   }
 
@@ -89,6 +109,8 @@ class GeoLocationData {
     return GeoLocationData(
       log: map['log']?.toDouble() ?? 0.0,
       lat: map['lat']?.toDouble() ?? 0.0,
+      seaLevel: map['seaLevel']?.toInt() ?? 0,
+      satelliteNo: map['satelliteNo']?.toInt() ?? 0,
     );
   }
 
@@ -99,9 +121,9 @@ class GeoLocationData {
 }
 
 class GyroData {
-  final int x;
-  final int y;
-  final int z;
+  int x;
+  int y;
+  int z;
   GyroData({
     required this.x,
     required this.y,

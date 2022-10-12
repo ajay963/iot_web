@@ -24,7 +24,6 @@ import 'package:rive/rive.dart' as rive;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cachedAnimation = await RiveAvatar.cachedAnimation;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   WidgetsBinding.instance.addPostFrameCallback((_) {});
@@ -48,38 +47,41 @@ Future<void> main() async {
     );
   }
 
-  runApp(MyApp(artboard: cachedAnimation.artboardByName('SPACE')));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final rive.Artboard? artboard;
-  const MyApp({Key? key, required this.artboard}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
-        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
-        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
-        ChangeNotifierProvider<HumidityData>(
-            create: (context) => HumidityData()),
-        ChangeNotifierProvider<InternetCheckerClass>(
-            create: (context) => InternetCheckerClass()),
-        ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
-        ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
-      ],
-      child: GetMaterialApp(
-        theme: Themeing.darkTheme,
-        color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? Colors.transparent
-            : Colors.black,
-        themeMode: ThemeMode.dark,
-        debugShowCheckedModeBanner: false,
-        home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? DesktopSingleView(
-                title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
-            : TempCumRGBApp(),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
+          ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
+          ChangeNotifierProvider<TempData>(create: (context) => TempData()),
+          ChangeNotifierProvider<HumidityData>(
+              create: (context) => HumidityData()),
+          ChangeNotifierProvider<InternetCheckerClass>(
+              create: (context) => InternetCheckerClass()),
+          ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
+          ChangeNotifierProvider<CrawlerData>(
+              create: (context) => CrawlerData())
+        ],
+        child: GetMaterialApp(
+          theme: Themeing.darkTheme,
+          color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+              ? Colors.transparent
+              : Colors.black,
+          themeMode: ThemeMode.dark,
+          debugShowCheckedModeBanner: false,
+          home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+              ? DesktopSingleView(
+                  title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
+              : TempCumRGBApp(),
+        ),
       ),
     );
   }
