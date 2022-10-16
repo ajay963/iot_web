@@ -126,9 +126,16 @@ class ViewAndControlCenter extends StatelessWidget {
                     ],
                     onChanged: (value) {
                       incomingData.setRed(data: value.toInt());
+                      if (incomingData.rgbLed.value.red % 10 == 0) {
+                        incomingData.sendcmd(rgbJson(
+                            red: incomingData.rgbLed.value.red,
+                            blue: incomingData.rgbLed.value.blue,
+                            green: incomingData.rgbLed.value.green));
+                      }
                     },
                     onChangeEnd: (rValue) {
                       incomingData.rgbLed.value.red = rValue.toInt();
+
                       incomingData.sendcmd(rgbJson(
                           red: incomingData.rgbLed.value.red,
                           blue: incomingData.rgbLed.value.blue,
@@ -143,6 +150,12 @@ class ViewAndControlCenter extends StatelessWidget {
                   colorsList: const [Colors.cyan, Colors.blue],
                   onChanged: (value) {
                     incomingData.setBlue(data: value.toInt());
+                    if (incomingData.rgbLed.value.blue % 10 == 0) {
+                      incomingData.sendcmd(rgbJson(
+                          red: incomingData.rgbLed.value.red,
+                          blue: incomingData.rgbLed.value.blue,
+                          green: incomingData.rgbLed.value.green));
+                    }
                   },
                   onChangeEnd: (bValue) {
                     incomingData.rgbLed.value.blue = bValue.toInt();
@@ -161,6 +174,12 @@ class ViewAndControlCenter extends StatelessWidget {
                     colorsList: const [Colors.teal, Colors.green],
                     onChanged: (value) {
                       incomingData.setGreen(data: value.toInt());
+                      if (incomingData.rgbLed.value.green % 10 == 0) {
+                        incomingData.sendcmd(rgbJson(
+                            red: incomingData.rgbLed.value.red,
+                            blue: incomingData.rgbLed.value.blue,
+                            green: incomingData.rgbLed.value.green));
+                      }
                     },
                     onChangeEnd: (gValue) {
                       incomingData.rgbLed.value.green = gValue.toInt();

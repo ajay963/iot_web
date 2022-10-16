@@ -1,7 +1,5 @@
 import 'package:flutter/Material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iot/colors.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class RotationGuage extends StatelessWidget {
