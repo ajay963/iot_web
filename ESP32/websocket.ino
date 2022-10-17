@@ -27,7 +27,15 @@ it uses UDP datagram packets which is much much faster for live stream of data
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h> // for gps 
 
-
+// motors for LN298 motor driver 
+// motor A
+#define in1  27 // ESP32 pin GIOP27 connected to the IN1 pin L298N
+#define in2  26 // ESP32 pin GIOP26 connected to the IN2 pin L298N
+#define enA  14 // ESP32 pin GIOP14 connected to the EN1 pin L298N
+// motor B
+#define in3  18 // ESP32 pin GIOP18 connected to the IN1 pin L298N
+#define in4  19 // ESP32 pin GIOP19 connected to the IN2 pin L298N
+#define enB  15 // ESP32 pin GIOP14 connected to the EN1 pin L298N
 
 #define dhttype DHT11 //defining DHT Type
 
@@ -83,7 +91,7 @@ int temp=0;
 int hum=0;
 
 TinyGPSPlus gps; // gps object intilization
-DHT dht(4, dhttype); //initialize DHT sensor, D5 is the pin where we connect data pin from sensor
+DHT dht(4, dhttype); //initialize DHT sensor, D5-no.4 is the pin where we connect data pin from sensor
 
 WebSocketsServer webSocket = WebSocketsServer(81); //websocket init with port 81
 
@@ -155,6 +163,57 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     }
 }
 
+// motor control
+void joystickControl(int xAxis,int yAxis){
+  int motorSpeedA = 0;
+  int motorSpeedB = 0;
+
+    if (yAxis < 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    motorSpeedA = map(yAxis, -100, 0, 0, 255);
+    motorSpeedB = map(yAxis, -100, 0, 0, 255);
+  }
+  
+  else if (yAxis > 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    motorSpeedA = map(yAxis, 0, 100, 0, 255);
+    motorSpeedB = map(yAxis, 0, 100, 0, 255);
+  }
+  
+  else {
+    motorSpeedA = 0;
+    motorSpeedB = 0;
+  }
+
+  if (xAxis < 0) {
+    int xMapped = map(xAxis, -100, 0, 0, 255);
+    motorSpeedA = motorSpeedA - xMapped;
+    motorSpeedB = motorSpeedB + xMapped;
+    
+    if (motorSpeedA < 0)   motorSpeedA = 0;
+    if (motorSpeedB > 255) motorSpeedB = 255;
+ }
+    if (xAxis > 0) {
+    int xMapped = map(xAxis, 0, 100, 0, 255);
+    motorSpeedA = motorSpeedA + xMapped;
+    motorSpeedB = motorSpeedB - xMapped;
+
+    if (motorSpeedA > 255) motorSpeedA = 255;
+    if (motorSpeedB < 0)   motorSpeedB = 0;
+  }
+ 
+  if (motorSpeedA < 70)  motorSpeedA = 0;
+  if (motorSpeedB < 70)  motorSpeedB = 0;
+  analogWrite(enA, motorSpeedA);
+  analogWrite(enB, motorSpeedB);
+}
+
 // multithreading 
 // esp32 has dual cores - 0 , 1
 
@@ -198,7 +257,15 @@ void sensorData_Task( void * parameters ){
 void setup() {
  
   Serial.begin(115200); //serial start
-    
+
+  // motor driver setup
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
   // RGB led setup()
   Serial.println("led set up");
    analogWriteResolution(ledpin1, resolution);
@@ -225,5 +292,6 @@ void setup() {
 
 // by default void loop running on core 1
 void loop() {}
+
 
 
