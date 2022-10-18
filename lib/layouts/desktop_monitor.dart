@@ -172,18 +172,7 @@ class AtmosDataW extends StatelessWidget {
         const SizedBox(width: 30),
         RichText(
           text: TextSpan(children: [
-            TextSpan(text: humidity, style: txtTheme.displayMedium),
-            WidgetSpan(
-              child: Transform.translate(
-                offset: const Offset(4, -20),
-                child: Text(
-                  'o',
-                  //superscript is usually smaller in size
-                  textScaleFactor: 0.7,
-                  style: txtTheme.bodyMedium,
-                ),
-              ),
-            ),
+            TextSpan(text: humidity + '%', style: txtTheme.displayMedium),
             TextSpan(text: '  humidity', style: txtTheme.bodySmall),
           ]),
         ),

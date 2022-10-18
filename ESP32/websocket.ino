@@ -24,18 +24,21 @@ it uses UDP datagram packets which is much much faster for live stream of data
 #include <ArduinoJson.h>
 #include <WebSocketsServer.h> //import for websocket
 #include <DHT.h> //library for DHT Sensor
-#include <SoftwareSerial.h>
-#include <TinyGPS++.h> // for gps 
+// #include <SoftwareSerial.h>
+// #include <TinyGPS++.h> // for gps 
 
+// multithreading task defination
+TaskHandle_t Task1;
+TaskHandle_t Task2;
 // motors for LN298 motor driver 
 // motor A
-#define in1  27 // ESP32 pin GIOP27 connected to the IN1 pin L298N
-#define in2  26 // ESP32 pin GIOP26 connected to the IN2 pin L298N
-#define enA  14 // ESP32 pin GIOP14 connected to the EN1 pin L298N
-// motor B
-#define in3  18 // ESP32 pin GIOP18 connected to the IN1 pin L298N
-#define in4  19 // ESP32 pin GIOP19 connected to the IN2 pin L298N
-#define enB  15 // ESP32 pin GIOP14 connected to the EN1 pin L298N
+// #define in1  27 // ESP32 pin GIOP27 connected to the IN1 pin L298N
+// #define in2  26 // ESP32 pin GIOP26 connected to the IN2 pin L298N
+// #define enA  14 // ESP32 pin GIOP14 connected to the EN1 pin L298N
+// // motor B
+// #define in3  18 // ESP32 pin GIOP18 connected to the IN1 pin L298N
+// #define in4  19 // ESP32 pin GIOP19 connected to the IN2 pin L298N
+// #define enB  15 // ESP32 pin GIOP14 connected to the EN1 pin L298N
 
 #define dhttype DHT11 //defining DHT Type
 
@@ -44,8 +47,11 @@ it uses UDP datagram packets which is much much faster for live stream of data
 #define ledpin2 17
 #define ledpin3 5
 
+
+
 const int freq = 5000;
 const int resolution = 8;
+int ctr=0;
 // 2^pow(8) = 256 
 // gives control over 0-255 
 // can set resolution to upto 16
@@ -90,7 +96,7 @@ String json; //variable for json
 int temp=0;
 int hum=0;
 
-TinyGPSPlus gps; // gps object intilization
+// TinyGPSPlus gps; // gps object intilization
 DHT dht(4, dhttype); //initialize DHT sensor, D5-no.4 is the pin where we connect data pin from sensor
 
 WebSocketsServer webSocket = WebSocketsServer(81); //websocket init with port 81
@@ -104,11 +110,11 @@ void rgbLed(int r,int g,int b){
   analogWrite(ledpin3, b);
 }
 
-void gpsInfo(){
-if (gps.location.isValid()) {
-double latitude = (gps.location.lat());
-double longitude = (gps.location.lng());
-}}
+// void gpsInfo(){
+// if (gps.location.isValid()) {
+// double latitude = (gps.location.lat());
+// double longitude = (gps.location.lng());
+// }}
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 //webscket event method
@@ -164,55 +170,99 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 }
 
 // motor control
-void joystickControl(int xAxis,int yAxis){
-  int motorSpeedA = 0;
-  int motorSpeedB = 0;
+// void joystickControl(int xAxis,int yAxis){
+//   int motorSpeedA = 0;
+//   int motorSpeedB = 0;
 
-    if (yAxis < 0) {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    digitalWrite(in3, HIGH);
-    digitalWrite(in4, LOW);
-    motorSpeedA = map(yAxis, -100, 0, 0, 255);
-    motorSpeedB = map(yAxis, -100, 0, 0, 255);
-  }
+//     if (yAxis < 0) {
+//     digitalWrite(in1, HIGH);
+//     digitalWrite(in2, LOW);
+//     digitalWrite(in3, HIGH);
+//     digitalWrite(in4, LOW);
+//     motorSpeedA = map(yAxis, -100, 0, 0, 255);
+//     motorSpeedB = map(yAxis, -100, 0, 0, 255);
+//   }
   
-  else if (yAxis > 0) {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    digitalWrite(in3, LOW);
-    digitalWrite(in4, HIGH);
-    motorSpeedA = map(yAxis, 0, 100, 0, 255);
-    motorSpeedB = map(yAxis, 0, 100, 0, 255);
-  }
+//   else if (yAxis > 0) {
+//     digitalWrite(in1, LOW);
+//     digitalWrite(in2, HIGH);
+//     digitalWrite(in3, LOW);
+//     digitalWrite(in4, HIGH);
+//     motorSpeedA = map(yAxis, 0, 100, 0, 255);
+//     motorSpeedB = map(yAxis, 0, 100, 0, 255);
+//   }
   
-  else {
-    motorSpeedA = 0;
-    motorSpeedB = 0;
-  }
+//   else {
+//     motorSpeedA = 0;
+//     motorSpeedB = 0;
+//   }
 
-  if (xAxis < 0) {
-    int xMapped = map(xAxis, -100, 0, 0, 255);
-    motorSpeedA = motorSpeedA - xMapped;
-    motorSpeedB = motorSpeedB + xMapped;
+//   if (xAxis < 0) {
+//     int xMapped = map(xAxis, -100, 0, 0, 255);
+//     motorSpeedA = motorSpeedA - xMapped;
+//     motorSpeedB = motorSpeedB + xMapped;
     
-    if (motorSpeedA < 0)   motorSpeedA = 0;
-    if (motorSpeedB > 255) motorSpeedB = 255;
- }
-    if (xAxis > 0) {
-    int xMapped = map(xAxis, 0, 100, 0, 255);
-    motorSpeedA = motorSpeedA + xMapped;
-    motorSpeedB = motorSpeedB - xMapped;
+//     if (motorSpeedA < 0)   motorSpeedA = 0;
+//     if (motorSpeedB > 255) motorSpeedB = 255;
+//  }
+//     if (xAxis > 0) {
+//     int xMapped = map(xAxis, 0, 100, 0, 255);
+//     motorSpeedA = motorSpeedA + xMapped;
+//     motorSpeedB = motorSpeedB - xMapped;
 
-    if (motorSpeedA > 255) motorSpeedA = 255;
-    if (motorSpeedB < 0)   motorSpeedB = 0;
-  }
+//     if (motorSpeedA > 255) motorSpeedA = 255;
+//     if (motorSpeedB < 0)   motorSpeedB = 0;
+//   }
  
-  if (motorSpeedA < 70)  motorSpeedA = 0;
-  if (motorSpeedB < 70)  motorSpeedB = 0;
-  analogWrite(enA, motorSpeedA);
-  analogWrite(enB, motorSpeedB);
+//   if (motorSpeedA < 70)  motorSpeedA = 0;
+//   if (motorSpeedB < 70)  motorSpeedB = 0;
+//   analogWrite(enA, motorSpeedA);
+//   analogWrite(enB, motorSpeedB);
+// }
+
+
+
+
+void setup() {
+ 
+  Serial.begin(115200); //serial start
+
+  // motor driver setup
+  // pinMode(enA, OUTPUT);
+  // pinMode(enB, OUTPUT);
+  // pinMode(in1, OUTPUT);
+  // pinMode(in2, OUTPUT);
+  // pinMode(in3, OUTPUT);
+  // pinMode(in4, OUTPUT);
+
+  // RGB led setup()
+  Serial.println("led set up");
+   analogWriteResolution(ledpin1, resolution);
+   analogWriteResolution(ledpin2, resolution);
+   analogWriteResolution(ledpin3, resolution);
+   
+  Serial.println("led set-up completed");
+
+   
+   WiFi.mode(WIFI_AP);
+   WiFi.softAP(ssid, pass);
+   IPAddress apIP(192, 168, 0, 1); 
+   Serial.println("created hotspot");  //Static IP for wifi gateway
+  //  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0)); //set Static IP gateway on NodeMCU
+  //  WiFi.softAP(ssid, pass); //turn on WIFI
+
+   webSocket.begin(); //websocket Begin
+   webSocket.onEvent(webSocketEvent); //set Event for websocket
+   Serial.println("Websocket is started");
+
+   // multithreading
+   xTaskCreatePinnedToCore(networking_Task, "networking task", 10000, NULL, 1, &Task1,  0); 
+   xTaskCreatePinnedToCore(sensorData_Task, "sensor data reading task", 10000, NULL, 1, &Task2,  1); 
 }
+
+// by default void loop running on core 1
+void loop() {}
+
 
 // multithreading 
 // esp32 has dual cores - 0 , 1
@@ -232,66 +282,33 @@ void networking_Task( void * parameters ){
       serializeJson(data, doc);
       delay(100);
       webSocket.broadcastTXT(doc); //send JSON to mobile
+      
+      Serial.print("Network Task running on core ");
+      Serial.println(xPortGetCoreID());
     } 
 }
 
 void sensorData_Task( void * parameters ){
+     
      while(true){
-     if(!isSet){
-     delay(2000); //delay by 2 second, DHT sesor senses data slowly with delay around 2 seconds
-     isSet=true;
-     }
-    
-     hum =(int) dht.readHumidity(); //Humidity float value from DHT sensor
-     temp =(int) dht.readTemperature(); //Temperature float value from DHT sensor
+      ctr=ctr+1;
+      int h = 80 + random(0,8); //Humidity float value from DHT sensor
+      int t = 25 + random(0,6);; //Temperature float value from DHT sensor
 
-     if (isnan(hum) || isnan(temp)) {
+     if (isnan(h) || isnan(t)) {
         //if data from DHT sensor is null
         Serial.println(F("Failed to read from DHT sensor!"));
         return;
      }
+     else {
+        if(ctr%30==0){  
+          temp=t;
+          hum=h;
+          ctr=0;
+        }}
+       Serial.print("Sensor Task running on core ");
+       Serial.println(xPortGetCoreID());
     } 
 }
-
-
-void setup() {
- 
-  Serial.begin(115200); //serial start
-
-  // motor driver setup
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
-
-  // RGB led setup()
-  Serial.println("led set up");
-   analogWriteResolution(ledpin1, resolution);
-   analogWriteResolution(ledpin2, resolution);
-   analogWriteResolution(ledpin3, resolution);
-   
-  Serial.println("led set-up completed");
-
-   Serial.println("Connecting to wifi");
-   WiFi.mode(WIFI_AP);
-   WiFi.softAP(ssid, pass);
-   IPAddress apIP(192, 168, 0, 1);   //Static IP for wifi gateway
-  //  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0)); //set Static IP gateway on NodeMCU
-  //  WiFi.softAP(ssid, pass); //turn on WIFI
-
-   webSocket.begin(); //websocket Begin
-   webSocket.onEvent(webSocketEvent); //set Event for websocket
-   Serial.println("Websocket is started");
-
-   // multithreading
-   xTaskCreatePinnedToCore(networking_Task, "networking task", 10000, NULL, 1, NULL,  1); 
-   xTaskCreatePinnedToCore(sensorData_Task, "sensor data reading task", 10000, NULL, 1, NULL,  0); 
-}
-
-// by default void loop running on core 1
-void loop() {}
-
 
 
