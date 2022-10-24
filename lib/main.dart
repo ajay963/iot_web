@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:iot/apps/temp_rgb.dart';
 import 'package:iot/widgets/desktop_layout.dart';
 import 'package:provider/provider.dart';
-import 'package:iot/widgets/buttos.dart';
 import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
 import 'package:iot/widgets/crawler_info.dart';
@@ -19,7 +18,6 @@ import 'package:iot/provider/sensors_data.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'layouts/desktop_monitor.dart';
 import 'package:rive/rive.dart' as rive;
 
 Future<void> main() async {
@@ -158,7 +156,7 @@ class KAppBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: 20),
-            KBackButton(onTap: () {}),
+            // KBackButton(onTap: () {}),
             const SizedBox(width: 40),
             CollisionWidget(distance: (_crawlerData.getYPosition / 2).abs()),
           ],
