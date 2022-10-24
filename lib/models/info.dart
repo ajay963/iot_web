@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-class ControlData {
+class MobileControl {
   final int xPos;
   final int yPos;
   final bool isActive;
   final RGBled rgbLED;
-  ControlData({
+  MobileControl({
     required this.xPos,
     required this.yPos,
     required this.isActive,
@@ -21,8 +21,8 @@ class ControlData {
     };
   }
 
-  factory ControlData.fromMap(Map<String, dynamic> map) {
-    return ControlData(
+  factory MobileControl.fromMap(Map<String, dynamic> map) {
+    return MobileControl(
       xPos: map['xPos']?.toInt() ?? 0,
       yPos: map['yPos']?.toInt() ?? 0,
       isActive: map['isActive'] ?? false,
@@ -32,8 +32,8 @@ class ControlData {
 
   String toJson() => json.encode(toMap());
 
-  factory ControlData.fromJson(String source) =>
-      ControlData.fromMap(json.decode(source));
+  factory MobileControl.fromJson(String source) =>
+      MobileControl.fromMap(json.decode(source));
 }
 
 class RGBled {
