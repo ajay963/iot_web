@@ -34,6 +34,42 @@ class AtmosDataModel {
       AtmosDataModel.fromMap(json.decode(source));
 }
 
+class AtmosData {
+  int temp;
+  int humidity;
+  int pressure;
+  int altitude;
+  AtmosData({
+    required this.temp,
+    required this.humidity,
+    required this.pressure,
+    required this.altitude,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'temp': temp,
+      'humidity': humidity,
+      'pressure': pressure,
+      'altitude': altitude,
+    };
+  }
+
+  factory AtmosData.fromMap(Map<String, dynamic> map) {
+    return AtmosData(
+      temp: map['temp']?.toInt() ?? 0,
+      humidity: map['humidity']?.toInt() ?? 0,
+      pressure: map['pressure']?.toInt() ?? 0,
+      altitude: map['altitude']?.toInt() ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AtmosData.fromJson(String source) =>
+      AtmosData.fromMap(json.decode(source));
+}
+
 class SensorInfo {
   final int temp;
   final int humidity;

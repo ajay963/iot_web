@@ -167,12 +167,12 @@ class SatelliteInfoWidget extends StatelessWidget {
   }
 }
 
-class AtmosData extends StatelessWidget {
+class AtmosDataWidget extends StatelessWidget {
   final int airIndex;
   final int carbonMonoxide;
   final int methane;
   final int conductivity;
-  const AtmosData(
+  const AtmosDataWidget(
       {Key? key,
       required this.airIndex,
       required this.carbonMonoxide,

@@ -23,7 +23,10 @@ it uses UDP datagram packets which is much much faster for live stream of data
 #include <WiFi.h>
 #include <ArduinoJson.h>
 #include <WebSocketsServer.h> //import for websocket
-#include <DHT.h> //library for DHT Sensor
+
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 // #include <SoftwareSerial.h>
 // #include <TinyGPS++.h> // for gps 
 
@@ -39,6 +42,10 @@ TaskHandle_t Task2;
 // #define in3  18 // ESP32 pin GIOP18 connected to the IN1 pin L298N
 // #define in4  19 // ESP32 pin GIOP19 connected to the IN2 pin L298N
 // #define enB  15 // ESP32 pin GIOP14 connected to the EN1 pin L298N
+
+#define SEALEVELPRESSURE_HPA (1013.25)
+
+Adafruit_BME280 bme; // I2C
 
 #define dhttype DHT11 //defining DHT Type
 
@@ -62,18 +69,40 @@ class RGBled{
   int red;
   int blue;
   int green;
+
+  RGBled(){
+    red = 0;
+    blue = 0;
+    green = 0;
+  }
 };
 
 class GPS{
   public:
-  double lat;
-  double log;
+  double latitude;
+  double longitude;
+  int satellites;
+
+  GPS(){
+    latitude = 0;
+    longitude = 0;
+    satellites = 0;
+  }
 };
 
 class AtmosData{
   public:
-  int temp;
-  int hum;
+  int temperature;
+  int humidity;
+  int pressure;
+  int altitude;
+
+  AtmosData(){
+    temperature=0;
+    humidity=0;
+    pressure=0;
+    altitude=0;
+  }
 };
 
 class LedBlink{
@@ -83,6 +112,8 @@ class LedBlink{
   void onDataIncoming(){}
 };
 
+
+ AtmosData atmosData;
  int red = 0; 
  int blue = 0; 
  int green = 0; 
@@ -97,7 +128,7 @@ int temp=0;
 int hum=0;
 
 // TinyGPSPlus gps; // gps object intilization
-DHT dht(4, dhttype); //initialize DHT sensor, D5-no.4 is the pin where we connect data pin from sensor
+// DHT dht(39, dhttype); //initialize DHT sensor, D5-no.4 is the pin where we connect data pin from sensor
 
 WebSocketsServer webSocket = WebSocketsServer(81); //websocket init with port 81
 
@@ -115,6 +146,29 @@ void rgbLed(int r,int g,int b){
 // double latitude = (gps.location.lat());
 // double longitude = (gps.location.lng());
 // }}
+
+void getAtmosdata(){
+  atmosData.temperature = bme.readTemperature();
+  atmosData.humidity = bme.readHumidity();
+  atmosData.pressure = bme.readPressure();
+  atmosData.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
+  
+  Serial.print("Temperature = ");
+  Serial.print(atmosData.temperature);
+  Serial.println(" *C");
+
+  Serial.print("Pressure = ");
+  Serial.print(atmosData.pressure / 100.0F);
+  Serial.println(" hPa");
+
+  Serial.print("Approx. Altitude = ");
+  Serial.print(atmosData.altitude);
+  Serial.println(" m");
+
+  Serial.print("Humidity = ");
+  Serial.print(atmosData.humidity);
+  Serial.println(" %");
+}
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 //webscket event method
@@ -234,7 +288,13 @@ void setup() {
   // pinMode(in2, OUTPUT);
   // pinMode(in3, OUTPUT);
   // pinMode(in4, OUTPUT);
-
+  
+  // BME sensor setup
+  bool status = bme.begin(0x76);                                                                                
+  if (!status) {
+    Serial.println("Could not detect a BME280 sensor, Fix wiring Connections!");
+    while (1);  // putting infinte delay, if sensor dose'nt work no sense to move forward 
+  }
   // RGB led setup()
   Serial.println("led set up");
    analogWriteResolution(ledpin1, resolution);
@@ -270,20 +330,29 @@ void loop() {}
 void networking_Task( void * parameters ){
      while(true){
       webSocket.loop(); 
+      
+
+      // in testing phase with BME-280
+
+      // StaticJsonDocument<64> doc;
+      // doc["temp"] = atmosData.temperature;
+      // doc["humidity"] = atmosData.humidity;
+      // doc["pressure"] = atmosData.pressure;
+      // doc["altitude"] = atmosData.altitude;
+      // serializeJson(doc, output);
 
       StaticJsonDocument<200> data;
-      data["temp"] = temp;
-      data["humidity"] = hum;
+      data["temp"] = atmosData.temperature;
+      data["humidity"] = atmosData.humidity;
 
      
         // Serial.println(data);
-        //formulate JSON string format from characters (Converted to string using chr2str())
       String doc;
       serializeJson(data, doc);
       delay(100);
       webSocket.broadcastTXT(doc); //send JSON to mobile
       
-      Serial.print("Network Task running on core ");
+      Serial.print("\nNetwork Task running on core :");
       Serial.println(xPortGetCoreID());
     } 
 }
@@ -292,21 +361,9 @@ void sensorData_Task( void * parameters ){
      
      while(true){
       ctr=ctr+1;
-      int h = 80 + random(0,8); //Humidity float value from DHT sensor
-      int t = 25 + random(0,6);; //Temperature float value from DHT sensor
-
-     if (isnan(h) || isnan(t)) {
-        //if data from DHT sensor is null
-        Serial.println(F("Failed to read from DHT sensor!"));
-        return;
-     }
-     else {
-        if(ctr%30==0){  
-          temp=t;
-          hum=h;
-          ctr=0;
-        }}
-       Serial.print("Sensor Task running on core ");
+      
+      getAtmosdata();
+       Serial.print("\nSensor Task running on core ");
        Serial.println(xPortGetCoreID());
     } 
 }
