@@ -2,26 +2,27 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:iot/models/sensors.dart';
+import 'package:iot/controller/sensors_controller.dart';
 import 'package:iot/models/temp.dart';
 import 'package:web_socket_channel/io.dart';
 
-class RoverIcomingDataController extends GetxController {
+class RoverIcomingDataControllerTest extends GetxController {
   RxInt idx = 0.obs;
   late IOWebSocketChannel channel;
   Rx<bool> isConnected = false.obs;
   RxList<GraphData> tempList = [GraphData(time: 0, value: 0)].obs;
   RxList<GraphData> humidityList = [GraphData(time: 0, value: 0)].obs;
-  Rx<SensorsData> sensorsData = SensorsData(
-          atmosphericData: BME280(temp: 0, humidity: 0, pressure: 0),
-          gpsData: NeoGPS6M(log: 0, lat: 0, seaLevel: 0, satelliteNo: 0),
-          gyroData: MPU6050Gyro(xAxis: 0, yAxis: 0, zAxis: 0),
-          gasData: GasData(airIndex: 0, co2: 0, ch4: 0))
+  Rx<Test1> sensorsData = Test1(
+          atmosData: BME280(temp: 0, humidity: 0, pressure: 0, altitude: 0),
+          obstacle: 0,
+          aqi: 0)
       .obs;
+  MaxMin tempMaxMin = MaxMin(maxValue: 0, minValue: 100);
+  MaxMin humidityMaxMin = MaxMin(maxValue: 0, minValue: 100);
   @override
   void onInit() {
     isConnected.value = false;
-    Timer.periodic(const Duration(seconds: 1), updateGraph);
+    Timer.periodic(const Duration(seconds: 1), _updateGraphAndValues);
     Future.delayed(Duration.zero, () async {
       channelconnect(); //connect to WebSocket wth NodeMCU
     });
@@ -36,7 +37,7 @@ class RoverIcomingDataController extends GetxController {
         (message) {
           debugPrint(message);
           isConnected.value = true;
-          sensorsData.value = SensorsData.fromJson(message);
+          sensorsData.value = Test1.fromJson(message);
         },
         onDone: () {
           //if WebSocket is disconnected
@@ -63,17 +64,21 @@ class RoverIcomingDataController extends GetxController {
     }
   }
 
-  void updateGraph(Timer time) {
+  void _updateGraphAndValues(Timer time) {
     idx = idx + 1;
     tempList.add(GraphData(
         time: idx.toDouble(),
-        value: sensorsData.value.atmosphericData.humidity.toDouble()));
+        value: sensorsData.value.atmosData.temp.toDouble()));
     humidityList.add(GraphData(
         time: idx.toDouble(),
-        value: sensorsData.value.atmosphericData.temp.toDouble()));
+        value: sensorsData.value.atmosData.humidity.toDouble()));
     if (humidityList.length > 10) humidityList.removeAt(0);
     if (tempList.length > 10) tempList.removeAt(0);
     if (isConnected.value == false && idx % 10 == 0) channelconnect();
+    if (idx > 10) {
+      tempMaxMin.setMaxMin(value: sensorsData.value.atmosData.temp);
+      humidityMaxMin.setMaxMin(value: sensorsData.value.atmosData.humidity);
+    }
     update();
   }
 }

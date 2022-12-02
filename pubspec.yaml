@@ -49,6 +49,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.2.40
   syncfusion_flutter_gauges: ^20.2.36
   get: ^4.6.5
+  step_progress_indicator: ^1.0.2
   
   #gaming assets
   flutter_joystick: ^0.0.2
@@ -89,6 +90,7 @@ flutter:
     - assets/maps/
     - assets/splash/
     - assets/char/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

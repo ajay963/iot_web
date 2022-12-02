@@ -1,5 +1,48 @@
 import 'dart:convert';
 
+class MaxMin {
+  int maxValue;
+  int minValue;
+  MaxMin({required this.maxValue, required this.minValue});
+
+  void setMaxMin({required int value}) {
+    if (value > maxValue) maxValue = value;
+    if (value < minValue) minValue = value;
+  }
+}
+
+// BME-280, Gas sensor and Ultrasonic sensor
+class Test1 {
+  BME280 atmosData;
+  int obstacle;
+  int aqi;
+  Test1({
+    required this.atmosData,
+    required this.obstacle,
+    required this.aqi,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'atmosData': atmosData.toMap(),
+      'obstacle': obstacle,
+      'aqi': aqi,
+    };
+  }
+
+  factory Test1.fromMap(Map<String, dynamic> map) {
+    return Test1(
+      atmosData: BME280.fromMap(map['atmosData']),
+      obstacle: map['obstacle']?.toInt() ?? 0,
+      aqi: map['aqi']?.toInt() ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Test1.fromJson(String source) => Test1.fromMap(json.decode(source));
+}
+
 class SensorsData {
   BME280 atmosphericData;
   NeoGPS6M gpsData;
@@ -40,10 +83,12 @@ class BME280 {
   int temp;
   int humidity;
   int pressure;
+  int altitude;
   BME280({
     required this.temp,
     required this.humidity,
     required this.pressure,
+    required this.altitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -51,6 +96,7 @@ class BME280 {
       'temp': temp,
       'humidity': humidity,
       'pressure': pressure,
+      'altitude': altitude,
     };
   }
 
@@ -59,6 +105,7 @@ class BME280 {
       temp: map['temp']?.toInt() ?? 0,
       humidity: map['humidity']?.toInt() ?? 0,
       pressure: map['pressure']?.toInt() ?? 0,
+      altitude: map['altitude']?.toInt() ?? 0,
     );
   }
 

@@ -1,5 +1,9 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:iot/colors.dart';
+import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 
 class KBackButton extends StatelessWidget {
@@ -8,22 +12,24 @@ class KBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.6),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(40),
-        onTap: onTap,
-        child: const Icon(
-          LineIcons.arrowLeft,
-          color: Colors.black,
+    return Ink(
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          shape: BoxShape.circle,
         ),
-      ),
-    );
+        child: InkWell(
+          onTap: (() {
+            // Get.back();
+          }),
+          borderRadius: BorderRadius.circular(20),
+          // hoverColor: Colors.green,
+          child: LineIcon.arrowLeft(
+            color: Colors.grey,
+            size: 20,
+          ),
+        ));
   }
 }
 
@@ -167,5 +173,34 @@ class CircularButton extends StatelessWidget {
       ),
       onTap: onTap,
     );
+  }
+}
+
+class KCloseWindow extends StatelessWidget {
+  const KCloseWindow({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Ink(
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: (() {
+            appWindow.close();
+            // Get.back();
+          }),
+          borderRadius: BorderRadius.circular(20),
+          // hoverColor: Colors.red.withOpacity(0.1),
+          child: LineIcon.times(
+            color: Colors.grey,
+            size: 20,
+          ),
+        ));
   }
 }

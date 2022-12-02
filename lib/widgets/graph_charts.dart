@@ -6,6 +6,9 @@ import '../models/temp.dart';
 const Color shade1 = Color(0xff23b6e6);
 const Color shade2 = Color(0xff02d39a);
 
+const Color purpleShade1 = Color(0xffB224EF);
+const Color purpleShade2 = Color(0xff7579FF);
+
 const Color orgShade1 = Color(0xffF12711);
 const Color orgShade2 = Color(0xffF5AF19);
 
@@ -24,18 +27,21 @@ class Charts extends StatelessWidget {
   Widget build(BuildContext context) {
     return SfCartesianChart(
       series: <ChartSeries>[
-        AreaSeries<GraphData, double>(
+        SplineAreaSeries<GraphData, double>(
           dataSource: list,
           xAxisName: xAisLabel,
           yAxisName: yAxisLabel,
           borderWidth: 2,
           borderGradient: const LinearGradient(
-            colors: [orgShade1, orgShade2],
+            colors: [purpleShade1, purpleShade2],
             begin: Alignment.topLeft,
             end: Alignment.topRight,
           ),
           gradient: LinearGradient(
-            colors: [orgShade1.withOpacity(0.3), orgShade2.withOpacity(0.3)],
+            colors: [
+              purpleShade1.withOpacity(0.3),
+              purpleShade2.withOpacity(0)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

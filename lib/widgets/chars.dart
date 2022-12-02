@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:iot/controller/temp_rgb_controller.dart';
 
 class NoConenction extends StatelessWidget {
-  NoConenction({Key? key}) : super(key: key);
-  final incomingDataController = Get.find<IncomingDataController>();
+  final int idx;
+  const NoConenction({Key? key, required this.idx}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -32,9 +31,7 @@ class NoConenction extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              "re-connecting in " +
-                  (10 - incomingDataController.idx.value % 10).toString() +
-                  " sec",
+              "re-connecting in " + (10 - idx % 10).toString() + " sec",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

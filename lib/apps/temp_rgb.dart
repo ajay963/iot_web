@@ -29,7 +29,7 @@ class TempCumRGBApp extends StatelessWidget {
               if (incomingData.isConnected.value) {
                 return ViewAndControlCenter(txtTheme: txtTheme);
               }
-              return NoConenction();
+              return NoConenction(idx: incomingData.idx.value);
             }),
           ),
         ),

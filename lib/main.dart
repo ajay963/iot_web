@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:iot/apps/atmos_system.dart';
+import 'package:iot/layouts/two_side.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:iot/apps/temp_rgb.dart';
-import 'package:iot/widgets/desktop_layout.dart';
+import 'package:iot/widgets/buttos.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
@@ -53,33 +55,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
-          ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
-          ChangeNotifierProvider<TempData>(create: (context) => TempData()),
-          ChangeNotifierProvider<HumidityData>(
-              create: (context) => HumidityData()),
-          ChangeNotifierProvider<InternetCheckerClass>(
-              create: (context) => InternetCheckerClass()),
-          ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
-          ChangeNotifierProvider<CrawlerData>(
-              create: (context) => CrawlerData())
-        ],
-        child: GetMaterialApp(
-          theme: Themeing.darkTheme,
-          color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-              ? Colors.transparent
-              : Colors.black,
-          themeMode: ThemeMode.dark,
-          debugShowCheckedModeBanner: false,
-          home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-              ? DesktopSingleView(
-                  title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
-              : TempCumRGBApp(),
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
+        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
+        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
+        ChangeNotifierProvider<HumidityData>(
+            create: (context) => HumidityData()),
+        ChangeNotifierProvider<InternetCheckerClass>(
+            create: (context) => InternetCheckerClass()),
+        ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
+        ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
+      ],
+      child: GetMaterialApp(
+        theme: Themeing.darkTheme,
+        color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? Colors.transparent
+            : Colors.black,
+        themeMode: ThemeMode.dark,
+        debugShowCheckedModeBanner: false,
+        home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ?
+            //  const Material(
+            // color: Colors.transparent,
+            // child:
+            // Center(child: LoadAnimation()))
+
+            TowColumn(
+                leftChild: const SideNavbar(), rightChild: AtmosDesktopView())
+
+            // DesktopSingleView(
+            // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
+            : TempCumRGBApp(),
       ),
     );
   }
@@ -187,4 +194,28 @@ class SpaceScene extends StatelessWidget {
           ),
         ),
       );
+}
+
+class SideNavbar extends StatelessWidget {
+  const SideNavbar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 40,
+          child: MoveWindow(),
+        ),
+        Row(children: [
+          const SizedBox(width: 20),
+          KBackButton(onTap: () {}),
+          const SizedBox(width: 15),
+          const KCloseWindow()
+        ]),
+      ],
+    );
+  }
 }

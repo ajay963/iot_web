@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iot/provider/colors_list.dart';
 
 class SliderWidget extends StatefulWidget {
   final double sliderHeight;
