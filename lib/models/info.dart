@@ -1,5 +1,61 @@
 import 'dart:convert';
 
+class RadialControl {
+  final int leftPower;
+  final int rightPower;
+  final bool isLeftPostive;
+  final bool isRightPositive;
+  final int ledBrightness;
+  RadialControl({
+    required this.leftPower,
+    required this.rightPower,
+    required this.isLeftPostive,
+    required this.isRightPositive,
+    required this.ledBrightness,
+  });
+
+  RadialControl copyWith({
+    int? leftPower,
+    int? rightPower,
+    bool? isLeftPostive,
+    bool? isRightPositive,
+    int? ledBrightness,
+  }) {
+    return RadialControl(
+      leftPower: leftPower ?? this.leftPower,
+      rightPower: rightPower ?? this.rightPower,
+      isLeftPostive: isLeftPostive ?? this.isLeftPostive,
+      isRightPositive: isRightPositive ?? this.isRightPositive,
+      ledBrightness: ledBrightness ?? this.ledBrightness,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'leftPower': leftPower,
+      'rightPower': rightPower,
+      'isLeftPostive': isLeftPostive,
+      'isRightPositive': isRightPositive,
+      'ledBrightness': ledBrightness,
+    };
+  }
+
+  factory RadialControl.fromMap(Map<String, dynamic> map) {
+    return RadialControl(
+      leftPower: map['leftPower']?.toInt() ?? 0,
+      rightPower: map['rightPower']?.toInt() ?? 0,
+      isLeftPostive: map['isLeftPostive'] ?? false,
+      isRightPositive: map['isRightPositive'] ?? false,
+      ledBrightness: map['ledBrightness']?.toInt() ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RadialControl.fromJson(String source) =>
+      RadialControl.fromMap(json.decode(source));
+}
+
 class MobileControl {
   final int xPos;
   final int yPos;

@@ -96,18 +96,23 @@ class TiltleText extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme txtTheme = Theme.of(context).textTheme;
     return SizedBox(
-      width: boxWidth.toDouble(),
+      // width: boxWidth.toDouble(),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Icon(
-            iconData,
-            size: 36,
-            color: kLtGrey,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Icon(
+              iconData,
+              size: 36,
+              color: kLtGrey,
+            ),
           ),
           const SizedBox(width: 10),
           Text(
             data,
-            style: txtTheme.displayMedium,
+            style: txtTheme.displayMedium!
+                .copyWith(fontSize: 72, fontWeight: FontWeight.w200),
           ),
         ],
       ),
@@ -153,16 +158,19 @@ class TextLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme txtTheme = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value.toString(),
-          style: txtTheme.displayMedium,
-        ),
-        const SizedBox(height: 0),
-        Text(label),
-      ],
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value.toString(),
+            style: txtTheme.displayMedium,
+          ),
+          const SizedBox(height: 0),
+          Text(label),
+        ],
+      ),
     );
   }
 }

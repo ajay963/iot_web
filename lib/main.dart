@@ -6,21 +6,17 @@ import 'package:iot/layouts/two_side.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:iot/apps/temp_rgb.dart';
 import 'package:iot/widgets/buttos.dart';
 import 'package:provider/provider.dart';
-import 'package:iot/provider/network.dart';
 import 'package:iot/widgets/google_map.dart';
 import 'package:iot/widgets/crawler_info.dart';
 import 'package:iot/widgets/joystick_pad.dart';
-import 'package:iot/provider/colors_list.dart';
 import 'package:iot/provider/crawler_data.dart';
-import 'package:iot/provider/light_data.dart';
-import 'package:iot/provider/sensors_data.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:rive/rive.dart' as rive;
+import 'layouts/circular_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,39 +51,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ColorData>(create: (context) => ColorData()),
-        ChangeNotifierProvider<LuxData>(create: (context) => LuxData()),
-        ChangeNotifierProvider<TempData>(create: (context) => TempData()),
-        ChangeNotifierProvider<HumidityData>(
-            create: (context) => HumidityData()),
-        ChangeNotifierProvider<InternetCheckerClass>(
-            create: (context) => InternetCheckerClass()),
-        ChangeNotifierProvider<ColorList>(create: (context) => ColorList()),
-        ChangeNotifierProvider<CrawlerData>(create: (context) => CrawlerData())
-      ],
-      child: GetMaterialApp(
-        theme: Themeing.darkTheme,
-        color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? Colors.transparent
-            : Colors.black,
-        themeMode: ThemeMode.dark,
-        debugShowCheckedModeBanner: false,
-        home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ?
-            //  const Material(
-            // color: Colors.transparent,
-            // child:
-            // Center(child: LoadAnimation()))
+    return GetMaterialApp(
+      theme: Themeing.darkTheme,
+      color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+          ? Colors.transparent
+          : Colors.black,
+      themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
+      home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+          ?
+          //  const Material(
+          // color: Colors.transparent,
+          // child:
+          // Center(child: LoadAnimation()))
 
-            TowColumn(
-                leftChild: const SideNavbar(), rightChild: AtmosDesktopView())
+          TowColumn(
+              leftChild: const SideNavbar(), rightChild: AtmosDesktopView())
 
-            // DesktopSingleView(
-            // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
-            : TempCumRGBApp(),
-      ),
+          // DesktopSingleView(
+          // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
+          : const SingleHandControl(),
     );
   }
 }

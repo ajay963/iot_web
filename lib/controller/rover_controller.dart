@@ -7,6 +7,7 @@ import 'package:iot/models/temp.dart';
 import 'package:web_socket_channel/io.dart';
 
 class RoverIcomingDataControllerTest extends GetxController {
+  int timeCtr = 0;
   RxInt idx = 0.obs;
   late IOWebSocketChannel channel;
   Rx<bool> isConnected = false.obs;
@@ -23,6 +24,11 @@ class RoverIcomingDataControllerTest extends GetxController {
   void onInit() {
     isConnected.value = false;
     Timer.periodic(const Duration(seconds: 1), _updateGraphAndValues);
+    Timer.periodic(const Duration(milliseconds: 10), (Timer time) {
+      log('counter: $timeCtr');
+      timeCtr++;
+      if (timeCtr > 15000) timeCtr = 0;
+    });
     Future.delayed(Duration.zero, () async {
       channelconnect(); //connect to WebSocket wth NodeMCU
     });
@@ -54,6 +60,20 @@ class RoverIcomingDataControllerTest extends GetxController {
   }
 
   Future<void> sendcmd(String cmd) async {
+    if (isConnected.value == true && timeCtr > 15) {
+      log(cmd);
+      channel.sink.add(cmd);
+      timeCtr = 0;
+    } else if (timeCtr <= 15) {
+      log("holded for time.");
+    } else {
+      channelconnect();
+      log(cmd);
+      log("Websocket is not connected.");
+    }
+  }
+
+  Future<void> directSendcmd(String cmd) async {
     if (isConnected.value == true) {
       log(cmd);
       channel.sink.add(cmd); //sending Command to NodeMCU
