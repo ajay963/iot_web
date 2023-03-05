@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
@@ -7,14 +8,18 @@ class LoadAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 300,
-      width: 300,
-      child: RiveAnimation.asset(
-        'assets/animations/loads.riv',
-        artboard: 'wait',
-        animations: ['loop'],
-        fit: BoxFit.cover,
+    return const Scaffold(
+      body: SizedBox(
+        height: 300,
+        width: 300,
+        child: Center(
+          child: RiveAnimation.asset(
+            'assets/animations/loads.riv',
+            artboard: 'wait',
+            animations: ['loop'],
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }

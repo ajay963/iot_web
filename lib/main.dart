@@ -1,19 +1,16 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:iot/apps/atmos_system.dart';
+import 'package:iot/apps/atmos_view.dart';
 import 'package:iot/layouts/two_side.dart';
 import 'package:iot/rive_avatar.dart';
 import 'package:iot/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:iot/widgets/buttos.dart';
 import 'package:provider/provider.dart';
 import 'package:iot/widgets/google_map.dart';
-import 'package:iot/widgets/crawler_info.dart';
 import 'package:iot/widgets/joystick_pad.dart';
 import 'package:iot/provider/crawler_data.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:iot/widgets/collision_widget.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:rive/rive.dart' as rive;
 import 'layouts/circular_controller.dart';
@@ -52,26 +49,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: Themeing.darkTheme,
-      color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-          ? Colors.transparent
-          : Colors.black,
-      themeMode: ThemeMode.dark,
-      debugShowCheckedModeBanner: false,
-      home: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-          ?
-          //  const Material(
-          // color: Colors.transparent,
-          // child:
-          // Center(child: LoadAnimation()))
+        theme: Themeing.darkTheme,
+        color: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? Colors.transparent
+            : Colors.black,
+        themeMode: ThemeMode.dark,
+        debugShowCheckedModeBanner: false,
+        home: AtmosMobileView()
 
-          TowColumn(
-              leftChild: const SideNavbar(), rightChild: AtmosDesktopView())
+        //  const Material(
+        // color: Colors.transparent,
+        // child:
+        // Center(child: LoadAnimation()))
 
-          // DesktopSingleView(
-          // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
-          : const SingleHandControl(),
-    );
+        // DesktopSingleView(
+        // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
+        // const SingleHandControl(),
+        );
   }
 }
 
@@ -89,7 +83,7 @@ class CrController extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const KAppBar(),
+              // const KAppBar(),
               Stack(alignment: Alignment.bottomCenter, children: [
                 Container(
                   height: 500,
@@ -104,12 +98,8 @@ class CrController extends StatelessWidget {
                   children: [
                     const CrJoyStickPad(),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 20,
-                      child: CrawlerInfo(
-                          speed: _crawlerData.getXPosition ~/ 2,
-                          temp: (_crawlerData.getYPosition - 30).abs(),
-                          humidity: _crawlerData.getYPosition.abs()),
-                    ),
+                        width: MediaQuery.of(context).size.width - 20,
+                        child: const Placeholder()),
                     const SizedBox(height: 10)
                   ],
                 ),
@@ -119,40 +109,6 @@ class CrController extends StatelessWidget {
         ]),
       ),
     );
-  }
-}
-
-class KAppBar extends StatelessWidget {
-  const KAppBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    CrawlerData _crawlerData = Provider.of<CrawlerData>(context);
-    return Stack(children: [
-      Container(
-        width: double.infinity,
-        height: 74,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Colors.black.withOpacity(0.8),
-          Colors.black.withOpacity(0)
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-      ),
-      SizedBox(
-        width: double.infinity,
-        height: 74,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(width: 20),
-            // KBackButton(onTap: () {}),
-            const SizedBox(width: 40),
-            CollisionWidget(distance: (_crawlerData.getYPosition / 2).abs()),
-          ],
-        ),
-      ),
-    ]);
   }
 }
 
@@ -177,28 +133,4 @@ class SpaceScene extends StatelessWidget {
           ),
         ),
       );
-}
-
-class SideNavbar extends StatelessWidget {
-  const SideNavbar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 40,
-          child: MoveWindow(),
-        ),
-        Row(children: [
-          const SizedBox(width: 20),
-          KBackButton(onTap: () {}),
-          const SizedBox(width: 15),
-          const KCloseWindow()
-        ]),
-      ],
-    );
-  }
 }

@@ -9,58 +9,58 @@ class Themeing extends ChangeNotifier {
   static const Color themeColor = Color(0xffFF924C);
 
   static ThemeData lightTheme = ThemeData(
-      backgroundColor: kLtGrey,
-      listTileTheme: ListTileThemeData(
-        selectedColor: Colors.white.withOpacity(0.8),
-        textColor: Colors.white.withOpacity(0.8),
-      ),
       textTheme: TextTheme(
-        displayLarge: TextStyle(
-            fontFamily: GoogleFonts.nunito().fontFamily,
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-            color: Colors.white),
-        headlineMedium: TextStyle(
-          fontFamily: GoogleFonts.nunito().fontFamily,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        headlineSmall: TextStyle(
-            fontFamily: GoogleFonts.nunito().fontFamily,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: kMdGrey),
-        bodyLarge: TextStyle(
-            fontFamily: GoogleFonts.nunito().fontFamily,
-            fontSize: 28,
-            fontWeight: FontWeight.w700,
-            color: Colors.white10),
-        bodyMedium: TextStyle(
-            fontFamily: GoogleFonts.nunito().fontFamily,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.5,
-            color: Colors.white.withOpacity(0.6)),
-        bodySmall: TextStyle(
-            fontFamily: GoogleFonts.nunito().fontFamily,
-            fontSize: 16,
-            height: 8,
-            fontWeight: FontWeight.w700,
-            color: kMdGrey),
-        labelMedium: TextStyle(
-          fontFamily: GoogleFonts.nunito().fontFamily,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.orange.shade600,
-        ),
-        labelSmall: TextStyle(
-          fontFamily: GoogleFonts.roboto().fontFamily,
-          fontSize: 12,
-          color: Colors.white.withOpacity(0.6),
-        ),
-      ));
+    displayLarge: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 36,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 2,
+        color: CustomColors.blackShade1),
+    displayMedium: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 2,
+        color: CustomColors.greyShade2),
+    headlineMedium: TextStyle(
+      fontFamily: GoogleFonts.nunito().fontFamily,
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: CustomColors.blackShade2,
+    ),
+    headlineSmall: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: kMdGrey),
+    bodyLarge: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        color: Colors.white10),
+    bodyMedium: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 16,
+        letterSpacing: 1.5,
+        color: CustomColors.greyShade3),
+    bodySmall: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        fontSize: 16,
+        height: 8,
+        fontWeight: FontWeight.w700,
+        color: kMdGrey),
+    labelMedium: TextStyle(
+      fontFamily: GoogleFonts.nunito().fontFamily,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.orange.shade600,
+    ),
+    labelSmall: TextStyle(
+      fontFamily: GoogleFonts.roboto().fontFamily,
+      fontSize: 12,
+      color: Colors.white.withOpacity(0.6),
+    ),
+  ));
 
   static ThemeData darkTheme = ThemeData(
     primaryColor: primaryColor,
