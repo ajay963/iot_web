@@ -5,7 +5,6 @@ import 'package:iot/models/info.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../controller/rover_controller.dart';
-import '../rive_radar.dart';
 
 class SingleHandControl extends StatefulWidget {
   const SingleHandControl({Key? key}) : super(key: key);

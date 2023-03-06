@@ -1,3 +1,4 @@
+import 'package:flutter/Material.dart';
 import 'package:flutter/gestures.dart'
     show Offset, PointerDeviceKind, TapDownDetails;
 import 'package:rive/math.dart' show Vec2D;
@@ -68,4 +69,27 @@ extension StateMachineControllerX on StateMachineController {
 
     return trigger is SMITrigger? ? trigger : null;
   }
+}
+
+class SpaceScene extends StatelessWidget {
+  /// All interactive avatar logic is managed there, controller-like.
+  final RiveAvatar _avatar;
+
+  SpaceScene(Artboard? cachedArtboard, {Key? key})
+      : _avatar = RiveAvatar(cachedArtboard),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: MouseRegion(
+          onHover: (event) => _avatar.move(event.localPosition),
+          // The useArtboardSize is important for accurate pointer position.
+          child: Rive(
+            artboard: _avatar.artboard,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
 }

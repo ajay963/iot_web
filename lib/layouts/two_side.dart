@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iot/colors.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+
+import '../utilities/colors.dart';
 
 class TowColumn extends StatelessWidget {
   final Widget leftChild; // mior widget

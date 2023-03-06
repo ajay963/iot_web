@@ -1,6 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/Material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iot/layouts/two_side.dart';
 
 class AQIDesktopView extends StatelessWidget {

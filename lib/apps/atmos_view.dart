@@ -1,6 +1,6 @@
 import 'package:flutter/Material.dart';
 import 'package:get/get.dart';
-import 'package:iot/rive_radar.dart';
+import 'package:iot/animation/rive_radar.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../controller/rover_controller.dart';
 

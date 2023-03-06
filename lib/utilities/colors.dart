@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'gradient_model.dart';
+import '../models/gradient_model.dart';
 
 const Color themeColor1 = Color(0xFFAF27EC);
 const Color themeColor2 = Color(0xFF7578FC);
@@ -40,4 +40,11 @@ class CustomGradients {
       color1: CustomColors.greenShade1, color2: CustomColors.greenShade2);
   static GradientModel magentaGradient = GradientModel(
       color1: CustomColors.magentaShade1, color2: CustomColors.magentaShade2);
+
+  static List<GradientModel> gradientList = [
+    orangeGradient,
+    blueGradient,
+    greenGradient,
+    magentaGradient,
+  ];
 }

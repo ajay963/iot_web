@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iot/colors.dart';
 import 'package:iot/widgets/radial_gauges.dart';
+
+import '../utilities/colors.dart';
 
 const int boxSize = 5;
 

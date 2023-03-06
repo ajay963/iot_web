@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iot/colors.dart';
+
+import 'colors.dart';
 
 const Color kThemeShadeMagenta = Color(0xffEC0055);
 
@@ -64,7 +65,6 @@ class Themeing extends ChangeNotifier {
 
   static ThemeData darkTheme = ThemeData(
     primaryColor: primaryColor,
-    backgroundColor: Colors.black,
     textTheme: TextTheme(
       displayMedium: TextStyle(
           fontFamily: GoogleFonts.nunito().fontFamily,
