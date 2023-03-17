@@ -43,7 +43,7 @@ dependencies:
   rive: ^0.10.2
   flutter_staggered_grid_view: ^0.6.1
   flutter_acrylic: ^1.0.0+2
-  flutter_svg: ^1.0.3
+  flutter_svg: ^2.0.4
   shared_preferences: ^2.0.13
   line_icons: ^2.0.1
   syncfusion_flutter_charts: ^20.2.40
@@ -56,7 +56,7 @@ dependencies:
   iconsax: ^0.0.8
   
   #gaming assets
-  flutter_joystick: ^0.0.2
+  flutter_joystick: ^0.0.3
   google_maps_flutter: ^2.2.5
   
   #conectivity
@@ -96,6 +96,7 @@ flutter:
     - assets/splash/
     - assets/char/
     - assets/animations/
+    - assets/joystick/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

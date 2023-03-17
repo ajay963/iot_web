@@ -3,8 +3,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iot/animation/bird_wallk.dart';
+import 'package:iot/apps/controller_page.dart';
 import 'package:iot/models/gradient_model.dart';
 import 'package:iot/widgets/cards.dart';
+import 'package:iot/widgets/joystick_pad.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -80,8 +82,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (contetx) => const ColorsPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (contetx) => const ControllerPage()));
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
