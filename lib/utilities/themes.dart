@@ -66,10 +66,20 @@ class Themeing extends ChangeNotifier {
   static ThemeData darkTheme = ThemeData(
     primaryColor: primaryColor,
     textTheme: TextTheme(
+      displayLarge: TextStyle(
+          fontFamily: GoogleFonts.comfortaa().fontFamily,
+          fontSize: 36,
+          fontWeight: FontWeight.w900,
+          color: Colors.white),
       displayMedium: TextStyle(
           fontFamily: GoogleFonts.nunito().fontFamily,
           fontSize: 36,
           fontWeight: FontWeight.w900,
+          color: Colors.white),
+      displaySmall: TextStyle(
+          fontFamily: GoogleFonts.rowdies().fontFamily,
+          fontSize: 36,
+          letterSpacing: 1.5,
           color: Colors.white),
       bodyLarge: TextStyle(
           fontFamily: GoogleFonts.nunito().fontFamily,

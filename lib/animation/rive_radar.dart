@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -25,7 +27,13 @@ class LoadAnimation extends StatelessWidget {
 }
 
 class RiveRadar extends StatefulWidget {
-  const RiveRadar({Key? key}) : super(key: key);
+  final double angle;
+  final bool isObstacle;
+  const RiveRadar({
+    Key? key,
+    required this.angle,
+    required this.isObstacle,
+  }) : super(key: key);
 
   @override
   State<RiveRadar> createState() => _RiveRadarState();
@@ -35,32 +43,56 @@ class _RiveRadarState extends State<RiveRadar> {
   Artboard? _riveArtboard;
   StateMachineController? controller;
   SMIInput<double>? rotation;
+  SMIInput<bool>? obstacle;
 
   @override
   void initState() {
+    Timer.periodic(const Duration(milliseconds: 300), (timer) => setUp());
     super.initState();
     rootBundle.load('assets/animations/loads.riv').then((data) async {
       final file = RiveFile.import(data);
       final artboard = file.artboardByName('scan');
       StateMachineController? controller =
-          StateMachineController.fromArtboard(artboard!, 'rotation');
+          StateMachineController.fromArtboard(artboard!, 'radar');
       if (controller != null) {
         artboard.addController(controller);
-        rotation = controller.findInput('rotation');
+        try {
+          rotation = controller.findInput('rotation');
+          obstacle = controller.findInput('obs');
+        } catch (error) {
+          debugPrint(error.toString());
+        }
         _riveArtboard = artboard;
         setState(() {});
       }
     });
   }
 
+  void setUp() {
+    debugPrint('value changing');
+
+    rotation?.value = widget.angle;
+    obstacle?.value = widget.isObstacle;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 300,
-        width: 300,
-        child: Rive(
+    return Builder(builder: (context) {
+      if (_riveArtboard != null) {
+        return Rive(
           artboard: _riveArtboard!,
           alignment: Alignment.center,
-        ));
+          fit: BoxFit.cover,
+        );
+      }
+      return const Center(
+        child: SizedBox(
+          height: 60,
+          width: 60,
+          child: CircularProgressIndicator(),
+        ),
+      );
+    });
   }
 }

@@ -29,6 +29,25 @@ class CustomColors {
   static const Color greenShade2 = Color(0xff11998E);
   static const Color magentaShade1 = Color(0xffFC6767);
   static const Color magentaShade2 = Color(0xffEC008C);
+  static const Color yellowShade1 = Color(0xffFFD200);
+  static const Color yellowShade2 = Color(0xffF7971E);
+  static const Color greenShade3 = Color(0xff35E97E);
+  static const Color greenShade4 = Color(0xff139E8D);
+  static const Color redShade1 = Color(0xffFF416B);
+  static const Color redShade2 = Color(0xffFF4B2C);
+  static const Color blueShade3 = Color(0xff8E2DE2);
+  static const Color blueShade4 = Color(0xff4A00E0);
+
+  static const List<Color> colorList = [
+    orangeShade1,
+    redShade1,
+    greenShade1,
+    yellowShade2,
+    blueShade1,
+    orangeShade2,
+    magentaShade1,
+    blueShade4
+  ];
 }
 
 class CustomGradients {
@@ -40,6 +59,14 @@ class CustomGradients {
       color1: CustomColors.greenShade1, color2: CustomColors.greenShade2);
   static GradientModel magentaGradient = GradientModel(
       color1: CustomColors.magentaShade1, color2: CustomColors.magentaShade2);
+  static GradientModel yellowGradient = GradientModel(
+      color1: CustomColors.yellowShade1, color2: CustomColors.yellowShade2);
+  static GradientModel waterGradient = GradientModel(
+      color1: CustomColors.blueShade3, color2: CustomColors.blueShade4);
+  static GradientModel lavaGradient = GradientModel(
+      color1: CustomColors.redShade1, color2: CustomColors.redShade2);
+  static GradientModel naturegreenGradient = GradientModel(
+      color1: CustomColors.greenShade3, color2: CustomColors.greenShade4);
 
   static List<GradientModel> gradientList = [
     orangeGradient,

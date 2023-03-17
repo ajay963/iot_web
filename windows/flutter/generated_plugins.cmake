@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   connectivity_plus_windows
   flutter_acrylic
+  rive_common
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

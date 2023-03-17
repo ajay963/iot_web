@@ -45,7 +45,7 @@ class CustomCard extends StatelessWidget {
                   child: Icon(
                     icon,
                     size: 52,
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.8),
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -68,10 +68,10 @@ class CustomCard extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [gradient.color1, gradient.color2],
-                    center: Alignment.topLeft,
-                  ),
+                  gradient: LinearGradient(
+                      colors: [gradient.color1, gradient.color2],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight),
                   boxShadow: [
                     BoxShadow(
                       color: gradient.color1.withOpacity(0.5),
