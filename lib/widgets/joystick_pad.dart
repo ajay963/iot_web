@@ -62,7 +62,7 @@ class JoyStickWidget extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                     color: CustomColors.redShade1.withOpacity(0.4),
-                    offset: const Offset(0, 4),
+                    offset: const Offset(-4, 0),
                     blurRadius: 24,
                     spreadRadius: 6)
               ]),

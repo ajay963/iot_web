@@ -12,6 +12,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'apps/aqi_page.dart';
 import 'apps/colors_page.dart';
+import 'apps/radar_page.dart';
 import 'utilities/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -55,6 +56,12 @@ class _HomePageState extends State<HomePage> {
     return items;
   }
 
+  List<Widget> appPages = const [
+    RadarPage(),
+    AQIPage(),
+    ControllerPage(),
+    ColorsPage(),
+  ];
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -82,10 +89,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (contetx) => const ControllerPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (contetx) => appPages[currTab]));
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),

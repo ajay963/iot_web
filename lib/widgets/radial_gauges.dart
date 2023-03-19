@@ -1,5 +1,6 @@
 import 'package:flutter/Material.dart';
 import 'package:flutter/material.dart';
+import 'package:iot/utilities/colors.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class RotationGuage extends StatelessWidget {
@@ -17,14 +18,14 @@ class RotationGuage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: 160,
       child: SfRadialGauge(
         axes: <RadialAxis>[
           RadialAxis(
             minimum: 0,
-            maximum: 100,
-            startAngle: 270,
-            endAngle: 270,
+            maximum: 120,
+            startAngle: 140,
+            endAngle: 400,
             showTicks: false,
             showLabels: false,
             radiusFactor: 0.7,
@@ -36,40 +37,29 @@ class RotationGuage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     text: TextSpan(children: [
                       TextSpan(
-                        text: value.toString(),
-                        style: Theme.of(context).textTheme.labelSmall,
+                        text: value.toString() + '\n',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(color: color1),
                       ),
-                      WidgetSpan(
-                        child: Transform.translate(
-                          offset: const Offset(2, -4),
-                          child: const Text(
-                            'o',
-                            //superscript is usually smaller in size
-                            textScaleFactor: 0.7,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      )
+                      TextSpan(
+                        text: 'cm/s',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 20,
+                            color: CustomColors.greyShade3,
+                            letterSpacing: 1.5),
+                      ),
                     ]),
                   ))
-            ],
-            ranges: [
-              GaugeRange(
-                startValue: 0,
-                endValue: 100,
-                startWidth: 6,
-                endWidth: 6,
-                color: Colors.white.withOpacity(0.2),
-              ),
             ],
             pointers: [
               RangePointer(
                 value: value.toDouble(),
                 enableAnimation: true,
-                width: 6,
-                color: Colors.white,
+                width: 10,
                 gradient:
-                    SweepGradient(colors: [color1.withOpacity(0), color2]),
+                    SweepGradient(colors: [if (value > 20) color1, color2]),
               ),
             ],
           ),
