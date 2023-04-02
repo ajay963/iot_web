@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:iot/animation/bird_wallk.dart';
+import 'package:iot/controller/master_controller.dart';
 import 'home_page.dart';
 import 'utilities/themes.dart';
 
@@ -32,11 +34,11 @@ Future<void> main() async {
     );
   }
 
-  runApp(const MyApp());
+  runApp(const WebsocketWrapperWidget());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class WebsocketWrapperWidget extends StatelessWidget {
+  const WebsocketWrapperWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +53,9 @@ class MyApp extends StatelessWidget {
             : Colors.black,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: const HomePage()
-
-        //  const Material(
-        // color: Colors.transparent,
-        // child:
-        // Center(child: LoadAnimation()))
-
-        // DesktopSingleView(
-        // title: 'Flutter-ESP32', bottomPannel: TempCumRGBApp())
-        // const SingleHandControl(),
-        );
+        home: GetBuilder<MasterDataController>(
+            builder: (MasterDataController data) {
+          return (data.isConnected.value) ? const HomePage() : const BirdWalk();
+        }));
   }
 }

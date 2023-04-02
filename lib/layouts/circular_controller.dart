@@ -67,7 +67,7 @@ class _SingleHandControlState extends State<SingleHandControl> {
                                   isRightPositive: true,
                                   ledBrightness: 0)
                               .toJson();
-                          dataController.directSendcmd(cmd);
+                          dataController.sendcmd(cmd);
                         },
                         onValueChanging: (value) {
                           setWheelValue(leftVal: value.value);

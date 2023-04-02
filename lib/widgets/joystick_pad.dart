@@ -12,9 +12,11 @@ class Assets {
 class JoyStickWidget extends StatelessWidget {
   final JoystickMode mode;
   final Function(StickDragDetails) listener;
+  final Function()? onStickDragEnd;
   const JoyStickWidget({
     Key? key,
     required this.listener,
+    this.onStickDragEnd,
     this.mode = JoystickMode.horizontal,
   }) : super(key: key);
 
@@ -26,6 +28,7 @@ class JoyStickWidget extends StatelessWidget {
         mode: mode,
         period: const Duration(milliseconds: 350),
         listener: listener,
+        onStickDragEnd: onStickDragEnd,
         base: SizedBox(
           height: 0.6 * screenSize.width,
           width: 0.6 * screenSize.width,

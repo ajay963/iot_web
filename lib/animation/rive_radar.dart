@@ -44,10 +44,12 @@ class _RiveRadarState extends State<RiveRadar> {
   StateMachineController? controller;
   SMIInput<double>? rotation;
   SMIInput<bool>? obstacle;
+  late Timer timer;
 
   @override
   void initState() {
-    Timer.periodic(const Duration(milliseconds: 300), (timer) => setUp());
+    timer =
+        Timer.periodic(const Duration(milliseconds: 300), (timer) => setUp());
     super.initState();
     rootBundle.load('assets/animations/loads.riv').then((data) async {
       final file = RiveFile.import(data);
@@ -73,7 +75,12 @@ class _RiveRadarState extends State<RiveRadar> {
 
     rotation?.value = widget.angle;
     obstacle?.value = widget.isObstacle;
-    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override

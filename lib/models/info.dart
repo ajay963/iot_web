@@ -122,3 +122,70 @@ class RGBled {
 
   factory RGBled.fromJson(String source) => RGBled.fromMap(json.decode(source));
 }
+
+class ControlData {
+  int x;
+  int y;
+  int r;
+  int g;
+  int b;
+  bool led;
+  ControlData({
+    required this.x,
+    required this.y,
+    required this.r,
+    required this.g,
+    required this.b,
+    required this.led,
+  });
+
+  ControlData copyWith({
+    int? x,
+    int? y,
+    int? r,
+    int? g,
+    int? b,
+    bool? led,
+  }) {
+    return ControlData(
+      x: x ?? this.x,
+      y: y ?? this.y,
+      r: r ?? this.r,
+      g: g ?? this.g,
+      b: b ?? this.b,
+      led: led ?? this.led,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'x': x,
+      'y': y,
+      'r': r,
+      'g': g,
+      'b': b,
+      'led': led,
+    };
+  }
+
+  factory ControlData.fromMap(Map<String, dynamic> map) {
+    return ControlData(
+      x: map['x']?.toInt() ?? 0,
+      y: map['y']?.toInt() ?? 0,
+      r: map['r']?.toInt() ?? 0,
+      g: map['g']?.toInt() ?? 0,
+      b: map['b']?.toInt() ?? 0,
+      led: map['led'] ?? false,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ControlData.fromJson(String source) =>
+      ControlData.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'ControlData(x: $x, y: $y, r: $r, g: $g, b: $b, led: $led)';
+  }
+}

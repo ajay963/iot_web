@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iot/widgets/joystick_pad.dart';
 import 'package:vibration/vibration.dart';
 
+import '../controller/rover_controller.dart';
+import '../models/info.dart';
 import '../utilities/colors.dart';
 import '../widgets/radial_gauges.dart';
 
@@ -18,12 +21,29 @@ class ControllerPage extends StatefulWidget {
 }
 
 class _ControllerPageState extends State<ControllerPage> {
-  int velocity = 0;
+  int velocityX = 0;
+  int velocityY = 0;
+  final RoverIcomingDataControllerTest websocket =
+      Get.put(RoverIcomingDataControllerTest());
+  ControlData mData = ControlData(x: 0, y: 0, r: 0, g: 0, b: 0, led: false);
   setVelocity({double? x, double? y}) {
-    if (x != null) velocity = x.toInt();
-    if (y != null) velocity = y.toInt();
-    if (x != null && x < 0) velocity = -1 * x.toInt();
-    if (y != null && y < 0) velocity = -1 * y.toInt();
+    if (x != null) {
+      debugPrint('x : $x}');
+      velocityX = x.toInt();
+    }
+    if (y != null) {
+      debugPrint('y : $y}');
+      velocityY = y.toInt();
+    }
+    if (x != null && x < 0) velocityX = -1 * x.toInt();
+    if (y != null && y < 0) velocityY = -1 * y.toInt();
+
+    mData.x = velocityX;
+    mData.y = velocityY;
+    // mData = mData.copyWith(x: velocityX, y: velocityY);
+    debugPrint(mData.toString());
+    debugPrint(mData.toJson().toString());
+    websocket.sendcmd(mData.toJson());
     setState(() {});
   }
 
@@ -46,8 +66,8 @@ class _ControllerPageState extends State<ControllerPage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            boundaryErrorWidgets(velocity, size: screenSize, flip: true),
-            boundaryErrorWidgets(velocity, size: screenSize),
+            boundaryErrorWidgets(velocityY, size: screenSize, flip: true),
+            boundaryErrorWidgets(velocityX, size: screenSize),
           ],
         ),
         Padding(
@@ -57,11 +77,11 @@ class _ControllerPageState extends State<ControllerPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 JoyStickWidget(
-                    mode: JoystickMode.horizontal,
-                    listener: (data) {
-                      debugPrint('y : ${data.x * 100}');
-                      setVelocity(y: data.x * 100);
-                    }),
+                  mode: JoystickMode.horizontal,
+                  listener: (data) {
+                    setVelocity(y: data.x * 100);
+                  },
+                ),
                 Row(
                   children: [
                     rotationButtons(context),
@@ -72,18 +92,18 @@ class _ControllerPageState extends State<ControllerPage> {
                         child: RotationGuage(
                           color1: CustomColors.magentaShade1,
                           color2: CustomColors.redShade1,
-                          value: velocity,
+                          value: velocityY,
                         ),
                       ),
                     ),
                   ],
                 ),
                 JoyStickWidget(
-                    mode: JoystickMode.vertical,
-                    listener: (data) {
-                      debugPrint('x : ${data.y * 100}');
-                      setVelocity(y: data.y * 100);
-                    }),
+                  mode: JoystickMode.vertical,
+                  listener: (data) {
+                    setVelocity(x: data.y * 100);
+                  },
+                ),
               ]),
         ),
       ]),
