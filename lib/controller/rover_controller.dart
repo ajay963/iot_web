@@ -6,8 +6,6 @@ import 'package:iot/controller/sensors_controller.dart';
 import 'package:iot/models/temp.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../models/master_model.dart';
-
 class RoverIcomingDataControllerTest extends GetxController {
   RxInt idx = 0.obs;
   late IOWebSocketChannel channel;
@@ -72,15 +70,11 @@ class RoverIcomingDataControllerTest extends GetxController {
     tempList.add(GraphData(
         time: idx.toDouble(),
         value: sensorsData.value.atmosData.temp.toDouble()));
-    humidityList.add(GraphData(
-        time: idx.toDouble(),
-        value: sensorsData.value.atmosData.humidity.toDouble()));
-    if (humidityList.length > 10) humidityList.removeAt(0);
+
     if (tempList.length > 10) tempList.removeAt(0);
     if (isConnected.value == false && idx % 10 == 0) channelconnect();
     if (idx > 10) {
       tempMaxMin.setMaxMin(value: sensorsData.value.atmosData.temp);
-      humidityMaxMin.setMaxMin(value: sensorsData.value.atmosData.humidity);
     }
     update();
   }

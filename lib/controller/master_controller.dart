@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -42,19 +39,22 @@ class MasterDataController extends GetxController {
           IOWebSocketChannel.connect("ws://192.168.4.1:81"); //channel IP : Port
       channel.stream.listen(
         (message) {
-          debugPrint(message);
+          log.i(message);
           isConnected.value = true;
           sensorsData.value = m.MasterDataModel.fromJson(message);
         },
         onDone: () {
           //if WebSocket is disconnected
-          debugPrint("Websocket is closed");
+          log.w("Websocket is closed");
           isConnected.value = false;
+          update();
         },
         onError: (error) {
-          // debugPrint("error" + error.toString());
+          log.e("socket error : $error");
         },
-      );
+      ).onError((e) {
+        log.e("socket error : $e");
+      });
     } catch (_) {
       log.e("error on connecting to websocket.");
     }
@@ -77,8 +77,10 @@ class MasterDataController extends GetxController {
         time: idx.toDouble(), value: sensorsData.value.atmos.temp.toDouble()));
 
     if (tempList.length > 10) tempList.removeAt(0);
-    if (isConnected.value == false && idx % 10 == 0) channelconnect();
-
+    if (isConnected.value == false && idx % 10 == 0) {
+      channelconnect();
+    }
+    log.i("seconds : $idx");
     update();
   }
 }

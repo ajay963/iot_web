@@ -69,7 +69,8 @@ class Themeing extends ChangeNotifier {
       displayLarge: TextStyle(
           fontFamily: GoogleFonts.comfortaa().fontFamily,
           fontSize: 36,
-          fontWeight: FontWeight.w900,
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w500,
           color: Colors.white),
       displayMedium: TextStyle(
           fontFamily: GoogleFonts.nunito().fontFamily,

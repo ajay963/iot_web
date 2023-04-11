@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:iot/animation/bird_wallk.dart';
 import 'package:iot/controller/master_controller.dart';
 import 'home_page.dart';
 import 'utilities/themes.dart';
@@ -34,11 +33,13 @@ Future<void> main() async {
     );
   }
 
-  runApp(const WebsocketWrapperWidget());
+  runApp(WebsocketWrapperWidget());
 }
 
 class WebsocketWrapperWidget extends StatelessWidget {
-  const WebsocketWrapperWidget({Key? key}) : super(key: key);
+  final MasterDataController websocket = Get.put(MasterDataController());
+
+  WebsocketWrapperWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,8 @@ class WebsocketWrapperWidget extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: GetBuilder<MasterDataController>(
             builder: (MasterDataController data) {
-          return (data.isConnected.value) ? const HomePage() : const BirdWalk();
+          return const HomePage();
+          // return (data.isConnected.value) ? const HomePage() : const BirdWalk();
         }));
   }
 }

@@ -7,7 +7,6 @@ import 'package:iot/animation/rive_radar.dart';
 import 'package:iot/models/gradient_model.dart';
 import 'package:line_icons/line_icon.dart';
 
-import '../home_page.dart';
 import '../utilities/colors.dart';
 import '../widgets/buttos.dart';
 

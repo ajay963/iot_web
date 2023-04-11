@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../home_page.dart';
 import '../utilities/colors.dart';
-import '../widgets/buttos.dart';
 
 const String path = 'assets/animations/birdy.riv';
 
@@ -16,15 +14,6 @@ class BirdWalk extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.yellow.shade50,
-      appBar: AppBar(
-        leadingWidth: 100,
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: CustomBackButton(onTap: () => Navigator.pop(context)),
-        ),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

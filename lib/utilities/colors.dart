@@ -73,5 +73,6 @@ class CustomGradients {
     blueGradient,
     greenGradient,
     magentaGradient,
+    waterGradient,
   ];
 }

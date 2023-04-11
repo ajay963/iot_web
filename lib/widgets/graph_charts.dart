@@ -26,12 +26,18 @@ class Charts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      plotAreaBorderColor: Colors.transparent,
+      enableAxisAnimation: true,
       series: <ChartSeries>[
         SplineAreaSeries<GraphData, double>(
           dataSource: list,
           xAxisName: xAisLabel,
           yAxisName: yAxisLabel,
-          borderWidth: 2,
+          borderWidth: 4,
+          isVisible: true,
+          isVisibleInLegend: false,
+          cardinalSplineTension: 0.2,
           borderGradient: const LinearGradient(
             colors: [purpleShade1, purpleShade2],
             begin: Alignment.topLeft,
@@ -49,6 +55,15 @@ class Charts extends StatelessWidget {
           yValueMapper: (GraphData data, _) => data.value,
         ),
       ],
+      primaryXAxis: CategoryAxis(
+          isVisible: true,
+          visibleMaximum: 4,
+          rangePadding: ChartRangePadding.round,
+          labelPlacement: LabelPlacement.onTicks),
+      primaryYAxis: CategoryAxis(
+        isVisible: false,
+        rangePadding: ChartRangePadding.none,
+      ),
     );
   }
 }
