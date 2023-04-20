@@ -12,8 +12,9 @@ class MasterDataController extends GetxController {
   RxInt idx = 0.obs;
   late IOWebSocketChannel channel;
   Rx<bool> isConnected = false.obs;
-  RxList<GraphData> tempList = [GraphData(time: 0, value: 0)].obs;
 
+  RxList<GraphData> tempList = [GraphData(time: 0, value: 0)].obs;
+  m.HL tempHL = m.HL(highest: 0, lowest: 85);
   Rx<m.MasterDataModel> sensorsData = m.MasterDataModel(
           atmos: m.AtmosDataModel(temp: 0, humidity: 0, pressure: 0),
           gps: m.GPSDataModel(lat: 23.79565310, lon: 23.79565310),
@@ -73,6 +74,12 @@ class MasterDataController extends GetxController {
 
   void _updateGraphAndValues(Timer time) {
     idx = idx + 1;
+
+    // range check
+    if (sensorsData.value.atmos.temp < 80 && sensorsData.value.atmos.temp > 4) {
+      tempHL = tempHL.getHL(sensorsData.value.atmos.temp);
+    }
+
     tempList.add(GraphData(
         time: idx.toDouble(), value: sensorsData.value.atmos.temp.toDouble()));
 

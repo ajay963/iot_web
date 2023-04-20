@@ -54,6 +54,8 @@ dependencies:
   smooth_page_indicator: ^1.0.1
   animated_text_kit: ^4.2.2
   iconsax: ^0.0.8
+
+  
   
   #gaming assets
   flutter_joystick: ^0.0.3

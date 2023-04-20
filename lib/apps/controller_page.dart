@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iot/widgets/joystick_pad.dart';
@@ -12,6 +13,8 @@ import '../controller/rover_controller.dart';
 import '../models/info.dart';
 import '../utilities/colors.dart';
 import '../widgets/radial_gauges.dart';
+
+const String gyroAssetPath = "assets/gyro.svg";
 
 class ControllerPage extends StatefulWidget {
   const ControllerPage({Key? key}) : super(key: key);
@@ -74,7 +77,7 @@ class _ControllerPageState extends State<ControllerPage> {
           padding: EdgeInsets.symmetric(vertical: 0.24 * screenSize.width),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 JoyStickWidget(
                   mode: JoystickMode.horizontal,
@@ -83,19 +86,55 @@ class _ControllerPageState extends State<ControllerPage> {
                   },
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    const SizedBox(width: 80),
                     rotationButtons(context),
                     Transform.rotate(
-                      angle: 90 * (pi / 180),
+                      angle: (velocityY + 90) * (pi / 180),
                       child: SizedBox(
-                        width: 200,
-                        child: RotationGuage(
-                          color1: CustomColors.magentaShade1,
-                          color2: CustomColors.redShade1,
-                          value: velocityY,
-                        ),
-                      ),
+                          height: 80,
+                          width: 80,
+                          child: SvgPicture.asset(gyroAssetPath)),
                     ),
+                    // Transform.rotate(
+                    //   angle: 90 * (pi / 180),
+                    //   child: RichText(
+                    //     textAlign: TextAlign.center,
+                    //     text: TextSpan(children: [
+                    //       TextSpan(
+                    //         text: velocityY.toString() + '\t',
+                    //         style: Theme.of(context)
+                    //             .textTheme
+                    //             .displaySmall!
+                    //             .copyWith(color: CustomColors.redShade1),
+                    //       ),
+                    //       TextSpan(
+                    //         text: 'cm/s',
+                    //         style: Theme.of(context)
+                    //             .textTheme
+                    //             .bodyMedium!
+                    //             .copyWith(
+                    //                 fontSize: 20,
+                    //                 color: CustomColors.greyShade3,
+                    //                 letterSpacing: 1.5),
+                    //       ),
+                    //     ]),
+                    //   ),
+                    // ),
+
+                    // Transform.rotate(
+                    //   angle: 90 * (pi / 180),
+                    //   child: SizedBox(
+                    //     width: 200,
+                    //     child: RotationGuage(
+                    //       color1: CustomColors.magentaShade1,
+                    //       color2: CustomColors.redShade1,
+                    //       value: velocityY,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 JoyStickWidget(

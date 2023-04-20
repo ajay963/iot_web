@@ -8,7 +8,10 @@ import 'package:iot/models/gradient_model.dart';
 import 'package:line_icons/line_icon.dart';
 
 import '../utilities/colors.dart';
+import '../utilities/logger.dart';
 import '../widgets/buttos.dart';
+
+final log = getLogger("radar_page");
 
 class RadarPage extends StatefulWidget {
   const RadarPage({Key? key}) : super(key: key);
@@ -33,7 +36,7 @@ class _RadarPageState extends State<RadarPage> {
     angle = radian * (180 / pi);
     angle = angle % 360;
     isObs = (angle > 70);
-    debugPrint('angle $angle');
+    log.i('angle $angle');
     setState(() {});
   }
 
@@ -91,7 +94,7 @@ class _RadarPageState extends State<RadarPage> {
                   text: TextSpan(children: [
                 TextSpan(
                     text: angle.round().toString() + '\n',
-                    style: textTheme.displayLarge!.copyWith(fontSize: 20)),
+                    style: textTheme.displaySmall!.copyWith(fontSize: 36)),
                 TextSpan(text: 'Obstacle distance', style: textTheme.bodyMedium)
               ])),
               InkWell(

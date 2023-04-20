@@ -1,4 +1,21 @@
 import 'dart:convert';
+import 'dart:math';
+
+class HL {
+  int highest;
+  int lowest;
+  HL({
+    required this.highest,
+    required this.lowest,
+  });
+
+  HL getHL(int data) {
+    highest = max(data, highest);
+    lowest = min(data, lowest);
+
+    return HL(highest: highest, lowest: lowest);
+  }
+}
 
 class AtmosDataModel {
   int temp;

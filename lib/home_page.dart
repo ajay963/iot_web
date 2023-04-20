@@ -36,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       CustomCard(
           title: 'Rover\nController',
           description: 'it is a long established fact that a reader will',
-          gradient: CustomGradients.orangeGradient,
-          icon: Iconsax.location,
+          gradient: CustomGradients.lavaGradient,
+          icon: Iconsax.notification_circle,
           isSelected: (index == 1)),
       CustomCard(
           title: 'Weather\nMonitoring',
@@ -62,11 +62,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> appPages = [
-    const ControllerPage(),
-    const RadarPage(),
-    WeatherPage(),
-    const AQIPage(),
     const GPSPage(),
+    const ControllerPage(),
+    WeatherPage(),
+    const RadarPage(),
+    const AQIPage(),
   ];
   @override
   Widget build(BuildContext context) {

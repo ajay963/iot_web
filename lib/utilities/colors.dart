@@ -70,9 +70,9 @@ class CustomGradients {
 
   static List<GradientModel> gradientList = [
     orangeGradient,
+    lavaGradient,
     blueGradient,
     greenGradient,
     magentaGradient,
-    waterGradient,
   ];
 }

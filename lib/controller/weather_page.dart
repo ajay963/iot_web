@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:iot/models/master_model.dart';
 import 'package:iot/utilities/logger.dart';
 import 'package:iot/widgets/graph_charts.dart';
+import 'package:line_icons/line_icons.dart';
 
 import '../utilities/colors.dart';
 import '../widgets/buttos.dart';
@@ -52,9 +54,9 @@ class WeatherPage extends StatelessWidget {
                   text: TextSpan(children: [
                     TextSpan(
                         text: data.sensorsData.value.atmos.temp.toString(),
-                        style: textTheme.bodyMedium!.copyWith(
+                        style: textTheme.displaySmall!.copyWith(
                           color: CustomColors.greyShade1,
-                          fontSize: 20,
+                          fontSize: 48,
                         )),
                     WidgetSpan(
                       child: Transform.translate(
@@ -78,20 +80,20 @@ class WeatherPage extends StatelessWidget {
                 child: RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                        text: data.sensorsData.value.atmos.temp.toString(),
+                        text: 'Highest : ' + data.tempHL.highest.toString(),
                         style: textTheme.bodyMedium!.copyWith(
-                          color: CustomColors.greyShade1,
+                          color: CustomColors.greyShade3,
                           fontSize: 20,
                         )),
                     WidgetSpan(
                       child: Transform.translate(
-                        offset: const Offset(2, -20),
-                        child: Text('oC',
+                        offset: const Offset(2, -5),
+                        child: Text('o',
                             //superscript is usually smaller in size
                             textScaleFactor: 1,
-                            style: textTheme.displaySmall!.copyWith(
-                              color: CustomColors.greyShade2,
-                              fontSize: 20,
+                            style: textTheme.bodyMedium!.copyWith(
+                              color: CustomColors.greyShade3,
+                              fontSize: 16,
                             )),
                       ),
                     )
@@ -104,26 +106,27 @@ class WeatherPage extends StatelessWidget {
                 child: RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                        text: data.sensorsData.value.atmos.temp.toString(),
-                        style: textTheme.displaySmall!.copyWith(
-                          color: CustomColors.greyShade1,
-                          fontSize: 48,
+                        text: 'Lowest : ' + data.tempHL.lowest.toString(),
+                        style: textTheme.bodyMedium!.copyWith(
+                          color: CustomColors.greyShade3,
+                          fontSize: 20,
                         )),
                     WidgetSpan(
                       child: Transform.translate(
-                        offset: const Offset(2, -20),
-                        child: Text('oC',
+                        offset: const Offset(2, -5),
+                        child: Text('o',
                             //superscript is usually smaller in size
                             textScaleFactor: 1,
-                            style: textTheme.displaySmall!.copyWith(
-                              color: CustomColors.greyShade2,
-                              fontSize: 20,
+                            style: textTheme.bodyMedium!.copyWith(
+                              color: CustomColors.greyShade3,
+                              fontSize: 16,
                             )),
                       ),
                     )
                   ]),
                 ),
               ),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 0.2 * MediaQuery.of(context).size.height,
                 width: double.infinity,
@@ -136,12 +139,12 @@ class WeatherPage extends StatelessWidget {
               visualData(data.sensorsData.value.atmos.humidity,
                   unit: '%',
                   label: 'humidity',
-                  icon: Iconsax.drop3,
+                  icon: LineIcons.water,
                   textTheme: textTheme),
               visualData(data.sensorsData.value.atmos.pressure,
                   unit: 'Pa',
                   label: 'pressure',
-                  icon: Iconsax.wind,
+                  icon: LineIcons.wind,
                   textTheme: textTheme),
             ],
           ),
@@ -171,7 +174,7 @@ class WeatherPage extends StatelessWidget {
             TextSpan(
                 text: data.toString() + '\t' + unit + '\n',
                 style: textTheme.displaySmall!.copyWith(
-                  color: CustomColors.greyShade1,
+                  color: CustomColors.greyShade3,
                   fontSize: 36,
                 )),
             TextSpan(

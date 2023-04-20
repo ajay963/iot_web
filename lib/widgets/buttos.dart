@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
-
+import 'package:iconsax/iconsax.dart';
 import '../utilities/colors.dart';
 
 class CustomBackButton extends StatelessWidget {
@@ -18,7 +17,7 @@ class CustomBackButton extends StatelessWidget {
         width: 56,
         child: const Center(
           child: Icon(
-            LineIcons.arrowLeft,
+            Iconsax.arrow_left,
             color: Colors.white,
             size: 20,
           ),
