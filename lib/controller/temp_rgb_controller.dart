@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iot/models/info.dart';
 import 'package:iot/models/temp.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iot/animation/rive_radar.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';

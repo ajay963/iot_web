@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart'
     show Offset, PointerDeviceKind, TapDownDetails;
 import 'package:rive/math.dart' show Vec2D;

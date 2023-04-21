@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:iot/models/gradient_model.dart';
 
@@ -83,17 +85,23 @@ class CustomCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 0.1 * MediaQuery.of(context).size.height),
+        
           AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeIn,
             height: (isSelected) ? 10 : 60,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              title,
-              style: textTheme.displayMedium!
-                  .copyWith(color: CustomColors.blackShade2),
+          Visibility(
+            // visible: (!Platform.isLinux),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                title,
+                style: textTheme.displayMedium!
+                    .copyWith(
+                      fontSize: (Platform.isLinux)?30:20,
+                      color: CustomColors.blackShade2),
+              ),
             ),
           ),
           AnimatedContainer(
@@ -101,14 +109,17 @@ class CustomCard extends StatelessWidget {
             curve: Curves.easeIn,
             height: (!isSelected) ? 10 : 60,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: Text(
-                description,
-                style: textTheme.bodyMedium!
-                    .copyWith(color: CustomColors.greyShade3),
+          Visibility(
+           visible: (!Platform.isLinux),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text(
+                  description,
+                  style: textTheme.bodyMedium!
+                      .copyWith(color: CustomColors.greyShade3),
+                ),
               ),
             ),
           )

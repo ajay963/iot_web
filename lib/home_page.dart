@@ -129,7 +129,9 @@ class _HomePageState extends State<HomePage> {
             CarouselSlider(
               carouselController: _carouselController,
               options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height:
+                  
+                   MediaQuery.of(context).size.height * 0.6,
                   viewportFraction: 1,
                   autoPlayCurve: Curves.bounceInOut,
                   onPageChanged: (index, reason) {
