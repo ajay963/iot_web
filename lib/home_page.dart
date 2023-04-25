@@ -89,37 +89,41 @@ class _HomePageState extends State<HomePage> {
           }),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (contetx) => appPages[currTab]));
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-              child: Text(
-                'View',
-                style: textTheme.bodyMedium!
-                    .copyWith(fontSize: 20, letterSpacing: 2),
+      floatingActionButton: Visibility(
+        visible: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (contetx) => appPages[currTab]));
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                child: Text(
+                  'View',
+                  style: textTheme.bodyMedium!
+                      .copyWith(fontSize: 20, letterSpacing: 2),
+                ),
               ),
+              style: TextButton.styleFrom(
+                  backgroundColor: CustomColors.blackShade2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30))),
             ),
-            style: TextButton.styleFrom(
-                backgroundColor: CustomColors.blackShade2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30))),
-          ),
-          const SizedBox(height: 20),
-          AnimatedSmoothIndicator(
-              activeIndex: currTab,
-              count: items(currTab).length,
-              effect: SwapEffect(
-                type: SwapType.yRotation,
-                activeDotColor: CustomGradients.gradientList[currTab].color2,
-              ))
-        ],
+            const SizedBox(height: 20),
+            AnimatedSmoothIndicator(
+                activeIndex: currTab,
+                count: items(currTab).length,
+                effect: SwapEffect(
+                  type: SwapType.yRotation,
+                  activeDotColor: CustomGradients.gradientList[currTab].color2,
+                ))
+          ],
+        ),
       ),
       body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -129,9 +133,7 @@ class _HomePageState extends State<HomePage> {
             CarouselSlider(
               carouselController: _carouselController,
               options: CarouselOptions(
-                  height:
-                  
-                   MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   viewportFraction: 1,
                   autoPlayCurve: Curves.bounceInOut,
                   onPageChanged: (index, reason) {
