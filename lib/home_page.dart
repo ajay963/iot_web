@@ -89,41 +89,37 @@ class _HomePageState extends State<HomePage> {
           }),
         ),
       ),
-      floatingActionButton: Visibility(
-        visible: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (contetx) => appPages[currTab]));
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                child: Text(
-                  'View',
-                  style: textTheme.bodyMedium!
-                      .copyWith(fontSize: 20, letterSpacing: 2),
-                ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (contetx) => appPages[currTab]));
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+              child: Text(
+                'View',
+                style: textTheme.bodyMedium!
+                    .copyWith(fontSize: 20, letterSpacing: 2),
               ),
-              style: TextButton.styleFrom(
-                  backgroundColor: CustomColors.blackShade2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30))),
             ),
-            const SizedBox(height: 20),
-            AnimatedSmoothIndicator(
-                activeIndex: currTab,
-                count: items(currTab).length,
-                effect: SwapEffect(
-                  type: SwapType.yRotation,
-                  activeDotColor: CustomGradients.gradientList[currTab].color2,
-                ))
-          ],
-        ),
+            style: TextButton.styleFrom(
+                backgroundColor: CustomColors.blackShade2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30))),
+          ),
+          const SizedBox(height: 20),
+          AnimatedSmoothIndicator(
+              activeIndex: currTab,
+              count: items(currTab).length,
+              effect: SwapEffect(
+                type: SwapType.yRotation,
+                activeDotColor: CustomGradients.gradientList[currTab].color2,
+              ))
+        ],
       ),
       body: Column(
           mainAxisSize: MainAxisSize.max,
