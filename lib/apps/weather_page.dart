@@ -8,7 +8,7 @@ import 'package:line_icons/line_icons.dart';
 
 import '../utilities/colors.dart';
 import '../widgets/buttos.dart';
-import 'master_controller.dart';
+import '../controller/master_controller.dart';
 
 final log = getLogger('weather_page');
 

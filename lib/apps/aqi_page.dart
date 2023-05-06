@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iot/utilities/colors.dart';
 
+import '../controller/master_controller.dart';
+import '../controller/rover_controller.dart';
 import '../widgets/buttos.dart';
 
 const int gasData1 = 142;
@@ -25,68 +28,88 @@ class AQIPage extends StatelessWidget {
           child: CustomBackButton(onTap: () => Navigator.pop(context)),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 40),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'AQI',
-                style: textTheme.displayLarge!
-                    .copyWith(fontSize: 40, color: CustomColors.greyShade3),
+      body: GetBuilder<MasterDataController>(
+          builder: (MasterDataController data) {
+        String riskLevel(int data) {
+          if (data >= 0 && data <= 50) {
+            return 'good';
+          } else if (data >= 51 && data <= 100) {
+            return 'good';
+          } else if (data >= 101 && data <= 150) {
+            return 'good';
+          } else if (data >= 151 && data <= 200) {
+            return 'good';
+          } else if (data >= 201 && data <= 300) {
+            return 'good';
+          } else if (data >= 301 && data < 500) {
+            return 'good';
+          }
+          return 'invalid data';
+        }
+
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'AQI',
+                  style: textTheme.displayLarge!
+                      .copyWith(fontSize: 40, color: CustomColors.greyShade3),
+                ),
               ),
-            ),
-            SizedBox(height: 0.1 * screenSize.height),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Index',
-                style: textTheme.bodyLarge!
-                    .copyWith(fontSize: 32, color: CustomColors.greyShade3),
+              SizedBox(height: 0.1 * screenSize.height),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Index',
+                  style: textTheme.bodyLarge!
+                      .copyWith(fontSize: 32, color: CustomColors.greyShade3),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                gasData1.toString(),
-                style: textTheme.displaySmall!
-                    .copyWith(fontSize: 48, color: CustomColors.blackShade2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  data.sensorsData.value.gas.mq135.toString(),
+                  style: textTheme.displaySmall!
+                      .copyWith(fontSize: 48, color: CustomColors.blackShade2),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'risk level : low',
-                style: textTheme.bodyLarge!
-                    .copyWith(fontSize: 20, color: CustomColors.greyShade3),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'air quality : low',
+                  style: textTheme.bodyLarge!
+                      .copyWith(fontSize: 20, color: CustomColors.greyShade3),
+                ),
               ),
-            ),
-            SizedBox(height: 0.1 * screenSize.height),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Other Gases',
-                style: textTheme.bodyLarge!
-                    .copyWith(fontSize: 32, color: CustomColors.greyShade3),
+              SizedBox(height: 0.1 * screenSize.height),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Other Gases',
+                  style: textTheme.bodyLarge!
+                      .copyWith(fontSize: 32, color: CustomColors.greyShade3),
+                ),
               ),
-            ),
-            SizedBox(height: 0.02 * screenSize.height),
-            gasConcentrationBox(
-                label: 'Carbon Monoxide',
-                concentration: gasData3,
-                unit: 'ppm',
-                textTheme: textTheme),
-            gasConcentrationBox(
-                label: 'Flamable Gases',
-                concentration: gasData2,
-                unit: 'ppm',
-                textTheme: textTheme)
-          ],
-        ),
-      ),
+              SizedBox(height: 0.02 * screenSize.height),
+              gasConcentrationBox(
+                  label: 'Carbon Monoxide',
+                  concentration: data.sensorsData.value.gas.mq4,
+                  unit: 'ppm',
+                  textTheme: textTheme),
+              gasConcentrationBox(
+                  label: 'Flamable Gases',
+                  concentration: data.sensorsData.value.gas.mq4,
+                  unit: 'ppm',
+                  textTheme: textTheme)
+            ],
+          ),
+        );
+      }),
     );
   }
 

@@ -1,19 +1,23 @@
+#include "esp32-hal-gpio.h"
 #include "esp32-hal-ledc.h"
 #include <Arduino.h>
 
 class MotorDriver{
+   
+   int motorSpeedA = 0;
+   int motorSpeedB = 0;
 
    const int frequency = 500;
    const int pwm_channel1 = 0;
-   const int pwm_channel2 = 0;
+   const int pwm_channel2 = 1;
    const int resolution = 8;
    
-   const int8_t m1 = 12;
-   const int8_t m2 = 13;
-   const int8_t enA = 14;
-   const int8_t m3 = 15;
-   const int8_t m4 = 16;
-   const int8_t enB = 17;
+   const int8_t m1 = 23;
+   const int8_t m2 = 19;
+   const int8_t enA = 18;  // pwm signal pins
+   const int8_t m3 = 4;
+   const int8_t m4 = 17;
+   const int8_t enB = 5;  // pwm signal pins
 
    public:
     
@@ -30,7 +34,7 @@ class MotorDriver{
       pinMode(enB, OUTPUT);
 
       ledcSetup(pwm_channel1, frequency, resolution);
-      ledcSetup(pwm_channel1, frequency, resolution);
+      ledcSetup(pwm_channel2, frequency, resolution);
       ledcAttachPin(enA, pwm_channel1);
       ledcAttachPin(enB, pwm_channel2);
 
@@ -38,8 +42,7 @@ class MotorDriver{
     
 // motor control
     void joystickControl(int xAxis,int yAxis){
-      int motorSpeedA = 0;
-      int motorSpeedB = 0;
+
 
         if (yAxis < 0) {
         digitalWrite(m1, HIGH);
@@ -65,6 +68,11 @@ class MotorDriver{
       }
 
       if (xAxis < 0) {
+        digitalWrite(m1, HIGH);
+        digitalWrite(m2, LOW);
+        digitalWrite(m3, LOW);
+        digitalWrite(m4, HIGH);
+        
         int xMapped = map(xAxis, -100, 0, 0, 255);
         motorSpeedA = motorSpeedA - xMapped;
         motorSpeedB = motorSpeedB + xMapped;
@@ -73,6 +81,12 @@ class MotorDriver{
         if (motorSpeedB > 255) motorSpeedB = 255;
     }
         if (xAxis > 0) {
+
+        digitalWrite(m1, LOW);
+        digitalWrite(m2, HIGH);
+        digitalWrite(m3, HIGH);
+        digitalWrite(m4, LOW);
+        
         int xMapped = map(xAxis, 0, 100, 0, 255);
         motorSpeedA = motorSpeedA + xMapped;
         motorSpeedB = motorSpeedB - xMapped;
@@ -83,8 +97,12 @@ class MotorDriver{
     
       if (motorSpeedA < 70)  motorSpeedA = 0;
       if (motorSpeedB < 70)  motorSpeedB = 0;
-      ledcAttachPin(enA, motorSpeedA);
-      ledcAttachPin(enB, motorSpeedB);
+      // ledcAttachPin(enA, motorSpeedA);
+      // ledcAttachPin(enB, motorSpeedB);
+
+      ledcWrite(pwm_channel1, motorSpeedA);
+      ledcWrite(pwm_channel2, motorSpeedB);
+
 
 }
     

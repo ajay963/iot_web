@@ -1,4 +1,5 @@
-#include <sys/_stdint.h>
+#include "HardwareSerial.h"
+// #include <sys/_stdint.h>
 #include "Wire.h"
 #include <Arduino.h>
 #include <MPU6050_light.h>
@@ -13,7 +14,7 @@ struct GyroData{
 
 GyroData gyroData;
 MPU6050 mpu(Wire);
-unsigned long timer = 0;
+
 
 class GyroSensor{
 
@@ -25,7 +26,9 @@ class GyroSensor{
       
       bool status = mpu.begin();
       Serial.print(F("MPU6050 status: "));
-      Serial.println(status);
+
+
+      (status!=0)? Serial.println("not working"):Serial.println("working");
       while(status!=0){ } // stop everything if could not connect to MPU6050
       
       Serial.println(F("Calculating offsets, do not move MPU6050"));
@@ -39,16 +42,13 @@ class GyroSensor{
 
 
    GyroData getData(){
-        const unsigned long interval = 50; 
+ 
         mpu.update();
-  
-        if((millis()-timer)>interval){ // print data every 10ms
+
         gyroData.pitch = mpu.getAngleX();
         gyroData.roll = mpu.getAngleY();
         gyroData.yaw = mpu.getAngleZ();
-
-        timer = millis();  
-     }
+  
     return gyroData;
  }
 

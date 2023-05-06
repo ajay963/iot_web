@@ -69,10 +69,9 @@ class CustomGradients {
       color1: CustomColors.greenShade3, color2: CustomColors.greenShade4);
 
   static List<GradientModel> gradientList = [
-    orangeGradient,
     lavaGradient,
     blueGradient,
-    greenGradient,
+    // greenGradient,
     magentaGradient,
   ];
 }

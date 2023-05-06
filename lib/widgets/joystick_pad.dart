@@ -26,7 +26,7 @@ class JoyStickWidget extends StatelessWidget {
     return Center(
       child: Joystick(
         mode: mode,
-        period: const Duration(milliseconds: 350),
+        period: const Duration(milliseconds: 800),
         listener: listener,
         onStickDragEnd: onStickDragEnd,
         base: SizedBox(

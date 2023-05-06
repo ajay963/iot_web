@@ -13,10 +13,14 @@ struct UltrasonicData{
 UltrasonicData sonar;
 
 class UltrasonicSensor{
+    
 
+    // left side
     const int trigPin1 = 27;
     const int echoPin1 = 34;
 
+
+    // right side
     const int trigPin2 = 32;
     const int echoPin2 = 35;
 
@@ -25,7 +29,7 @@ class UltrasonicSensor{
     int SonarSensor(int trigPin,int echoPin) {
 
       digitalWrite(trigPin, LOW);
-      delayMicroseconds(2);
+      delayMicroseconds(2); 
       digitalWrite(trigPin, HIGH);
       delayMicroseconds(10);
       digitalWrite(trigPin, LOW);
@@ -47,14 +51,15 @@ class UltrasonicSensor{
    }
 
    UltrasonicData getData(){
-     sonar.fd = SonarSensor(trigPin1, echoPin1);
-     sonar.rd = SonarSensor(trigPin2, echoPin2);
+     sonar.rd = SonarSensor(trigPin1, echoPin1);
+     sonar.ld = SonarSensor(trigPin2, echoPin2);
       
      return sonar;
    }
 
    void prinData(){
-
+    
+    Serial.print("\n");
     Serial.print("front sensor : ");
     Serial.print(sonar.fd);
     Serial.print("\n");

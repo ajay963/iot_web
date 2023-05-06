@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iot/apps/controller_page.dart';
 import 'package:iot/apps/tracking_page.dart';
-import 'package:iot/controller/weather_page.dart';
+import 'package:iot/apps/weather_page.dart';
 import 'package:iot/models/gradient_model.dart';
 import 'package:iot/widgets/cards.dart';
 import 'package:line_icons/line_icons.dart';
@@ -26,46 +26,49 @@ class _HomePageState extends State<HomePage> {
   final CarouselController _carouselController = CarouselController();
 
   List<Widget> items(int index) {
+    // features have been reduces due to lack of time
     List<Widget> items = [
-      CustomCard(
-          title: 'Live\nTracking',
-          description: 'it is a long established fact that a reader will',
-          gradient: CustomGradients.orangeGradient,
-          icon: Iconsax.location,
-          isSelected: (index == 0)),
+      // CustomCard(
+      //     title: 'Live\nTracking',
+      //     description: 'it is a long established fact that a reader will',
+      //     gradient: CustomGradients.orangeGradient,
+      //     icon: Iconsax.location,
+      //     isSelected: (index == 0)),
       CustomCard(
           title: 'Rover\nController',
-          description: 'it is a long established fact that a reader will',
+          description: 'Input and feedback mechanism for rover',
           gradient: CustomGradients.lavaGradient,
           icon: Iconsax.notification_circle,
-          isSelected: (index == 1)),
+          isSelected: (index == 0)),
       CustomCard(
           title: 'Weather\nMonitoring',
-          description: 'it is a long established fact that a reader will',
+          description:
+              'Frequent and continous monitoring of the surface climate',
           gradient: CustomGradients.blueGradient,
           icon: Iconsax.cloud,
-          isSelected: (index == 2)),
-      CustomCard(
-          title: 'Ultrasonic\nRadar',
-          description: 'it is a long established fact that a reader will',
-          gradient: CustomGradients.greenGradient,
-          icon: Iconsax.radar_2,
-          isSelected: (index == 3)),
+          isSelected: (index == 1)),
+      // CustomCard(
+      //     title: 'Ultrasonic\nRadar',
+      //     description: 'it is a long established fact that a reader will',
+      //     gradient: CustomGradients.greenGradient,
+      //     icon: Iconsax.radar_2,
+      //     isSelected: (index == 3)),
       CustomCard(
           title: 'AQI\nIndex',
-          description: 'it is a long established fact that a reader will',
+          description:
+              'Numeric scale to monitor air quality index and other gases concentration',
           gradient: CustomGradients.magentaGradient,
           icon: Iconsax.airdrop,
-          isSelected: (index == 4)),
+          isSelected: (index == 2)),
     ];
     return items;
   }
 
   List<Widget> appPages = [
-    const GPSPage(),
+    // const GPSPage(),
     const ControllerPage(),
     WeatherPage(),
-    const RadarPage(),
+    // const RadarPage(),
     const AQIPage(),
   ];
   @override

@@ -6,13 +6,15 @@ import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:iot/utilities/logger.dart';
 import 'package:iot/widgets/joystick_pad.dart';
 import 'package:vibration/vibration.dart';
 
-import '../controller/rover_controller.dart';
+import '../controller/master_controller.dart';
 import '../models/info.dart';
 import '../utilities/colors.dart';
-import '../widgets/radial_gauges.dart';
+
+var log = getLogger("rover controller");
 
 const String gyroAssetPath = "assets/gyro.svg";
 
@@ -26,27 +28,22 @@ class ControllerPage extends StatefulWidget {
 class _ControllerPageState extends State<ControllerPage> {
   int velocityX = 0;
   int velocityY = 0;
-  final RoverIcomingDataControllerTest websocket =
-      Get.put(RoverIcomingDataControllerTest());
-  ControlData mData = ControlData(x: 0, y: 0, r: 0, g: 0, b: 0, led: false);
-  setVelocity({double? x, double? y}) {
-    if (x != null) {
-      debugPrint('x : $x}');
-      velocityX = x.toInt();
-    }
-    if (y != null) {
-      debugPrint('y : $y}');
-      velocityY = y.toInt();
-    }
-    if (x != null && x < 0) velocityX = -1 * x.toInt();
-    if (y != null && y < 0) velocityY = -1 * y.toInt();
+  final MasterDataController data = Get.find<MasterDataController>();
 
-    mData.x = velocityX;
-    mData.y = velocityY;
+  ControlData mData = ControlData(x: 0, y: 0, r: 0, g: 0, b: 0, led: false);
+  setVelocity({double? x_data, double? y_data}) {
+    log.i("x-axis : $x_data y-data : $y_data");
+
+    if (x_data != null) {
+      mData.x = x_data.toInt();
+    }
+    if (y_data != null) {
+      mData.y = y_data.toInt();
+    }
     // mData = mData.copyWith(x: velocityX, y: velocityY);
-    debugPrint(mData.toString());
-    debugPrint(mData.toJson().toString());
-    websocket.sendcmd(mData.toJson());
+    // log.i(mData.toString());
+    log.i(mData.toJson().toString());
+    data.sendcmd(mData.toJson());
     setState(() {});
   }
 
@@ -64,88 +61,96 @@ class _ControllerPageState extends State<ControllerPage> {
       SystemUiMode.manual,
       overlays: [],
     );
-    return Scaffold(
-      body: Stack(alignment: Alignment.center, children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            boundaryErrorWidgets(velocityY, size: screenSize, flip: true),
-            boundaryErrorWidgets(velocityX, size: screenSize),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 0.24 * screenSize.width),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                JoyStickWidget(
-                  mode: JoystickMode.horizontal,
-                  listener: (data) {
-                    setVelocity(y: data.x * 100);
-                  },
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 80),
-                    rotationButtons(context),
-                    Transform.rotate(
-                      angle: (velocityY + 90) * (pi / 180),
-                      child: SizedBox(
-                          height: 80,
-                          width: 80,
-                          child: SvgPicture.asset(gyroAssetPath)),
-                    ),
-                    // Transform.rotate(
-                    //   angle: 90 * (pi / 180),
-                    //   child: RichText(
-                    //     textAlign: TextAlign.center,
-                    //     text: TextSpan(children: [
-                    //       TextSpan(
-                    //         text: velocityY.toString() + '\t',
-                    //         style: Theme.of(context)
-                    //             .textTheme
-                    //             .displaySmall!
-                    //             .copyWith(color: CustomColors.redShade1),
-                    //       ),
-                    //       TextSpan(
-                    //         text: 'cm/s',
-                    //         style: Theme.of(context)
-                    //             .textTheme
-                    //             .bodyMedium!
-                    //             .copyWith(
-                    //                 fontSize: 20,
-                    //                 color: CustomColors.greyShade3,
-                    //                 letterSpacing: 1.5),
-                    //       ),
-                    //     ]),
-                    //   ),
-                    // ),
 
-                    // Transform.rotate(
-                    //   angle: 90 * (pi / 180),
-                    //   child: SizedBox(
-                    //     width: 200,
-                    //     child: RotationGuage(
-                    //       color1: CustomColors.magentaShade1,
-                    //       color2: CustomColors.redShade1,
-                    //       value: velocityY,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-                JoyStickWidget(
-                  mode: JoystickMode.vertical,
-                  listener: (data) {
-                    setVelocity(x: data.y * 100);
-                  },
-                ),
-              ]),
-        ),
-      ]),
+    return Scaffold(
+      body: GetBuilder<MasterDataController>(
+          builder: (MasterDataController data) {
+        return Stack(alignment: Alignment.center, children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              boundaryErrorWidgets(data.sensorsData.value.reflex.lClr,
+                  size: screenSize, flip: true),
+              boundaryErrorWidgets(data.sensorsData.value.reflex.rClr,
+                  size: screenSize),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 0.24 * screenSize.width),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  JoyStickWidget(
+                    mode: JoystickMode.horizontal,
+                    listener: (data) {
+                      setVelocity(y_data: data.x * 100);
+                    },
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 80),
+                      rotationButtons(context),
+
+                      Transform.rotate(
+                        angle: (data.sensorsData.value.reflex.roll + 90) *
+                            (pi / 180),
+                        child: SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: SvgPicture.asset(gyroAssetPath)),
+                      ),
+                      // Transform.rotate(
+                      //   angle: 90 * (pi / 180),
+                      //   child: RichText(
+                      //     textAlign: TextAlign.center,
+                      //     text: TextSpan(children: [
+                      //       TextSpan(
+                      //         text: velocityY.toString() + '\t',
+                      //         style: Theme.of(context)
+                      //             .textTheme
+                      //             .displaySmall!
+                      //             .copyWith(color: CustomColors.redShade1),
+                      //       ),
+                      //       TextSpan(
+                      //         text: 'cm/s',
+                      //         style: Theme.of(context)
+                      //             .textTheme
+                      //             .bodyMedium!
+                      //             .copyWith(
+                      //                 fontSize: 20,
+                      //                 color: CustomColors.greyShade3,
+                      //                 letterSpacing: 1.5),
+                      //       ),
+                      //     ]),
+                      //   ),
+                      // ),
+
+                      // Transform.rotate(
+                      //   angle: 90 * (pi / 180),
+                      //   child: SizedBox(
+                      //     width: 200,
+                      //     child: RotationGuage(
+                      //       color1: CustomColors.magentaShade1,
+                      //       color2: CustomColors.redShade1,
+                      //       value: velocityY,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  JoyStickWidget(
+                    mode: JoystickMode.vertical,
+                    listener: (data) {
+                      setVelocity(x_data: data.y * 100);
+                    },
+                  ),
+                ]),
+          ),
+        ]);
+      }),
     );
   }
 
@@ -206,30 +211,31 @@ class _ControllerPageState extends State<ControllerPage> {
   }
 
   boundaryErrorWidgets(int value, {required Size size, bool flip = false}) {
-    if (value > 90) {
-      value = value;
+    // if distance is less than 10 cm then alert the user by heptic (vibration)
+    if (value < 10) {
       hepticFn();
-    } else {
-      value = 0;
     }
 
-    double opacityVal = value / 100;
+    double opacityVal = (value < 10) ? (10 - value) / 10 : 0;
 
-    return Opacity(
-      opacity: 0.4,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        height: 0.3 * size.height,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            CustomColors.redShade1.withOpacity(opacityVal),
-            Colors.white.withOpacity(0)
-          ],
-          begin: (flip) ? Alignment.topCenter : Alignment.bottomCenter,
-          end: (flip) ? Alignment.bottomCenter : Alignment.topCenter,
-        )),
+    return Visibility(
+      visible: (value < 10),
+      child: Opacity(
+        opacity: 0.4,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          height: 0.3 * size.height,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            colors: [
+              CustomColors.redShade1.withOpacity(opacityVal),
+              Colors.white.withOpacity(0)
+            ],
+            begin: (flip) ? Alignment.topCenter : Alignment.bottomCenter,
+            end: (flip) ? Alignment.bottomCenter : Alignment.topCenter,
+          )),
+        ),
       ),
     );
   }
