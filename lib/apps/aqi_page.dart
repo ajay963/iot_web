@@ -98,7 +98,7 @@ class AQIPage extends StatelessWidget {
               SizedBox(height: 0.02 * screenSize.height),
               gasConcentrationBox(
                   label: 'Carbon Monoxide',
-                  concentration: data.sensorsData.value.gas.mq4,
+                  concentration: data.sensorsData.value.gas.mq7,
                   unit: 'ppm',
                   textTheme: textTheme),
               gasConcentrationBox(
