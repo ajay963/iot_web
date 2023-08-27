@@ -43,8 +43,8 @@ class LeftWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [],
+    return const Column(
+      children: [],
     );
   }
 }
@@ -54,7 +54,7 @@ class RightWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [Row(), Row()],
     );
   }

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:iot/utilities/colors.dart';
 
 import '../controller/master_controller.dart';
-import '../controller/rover_controller.dart';
 import '../widgets/buttos.dart';
 
 const int gasData1 = 142;

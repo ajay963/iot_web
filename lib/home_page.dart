@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iot/apps/controller_page.dart';
-import 'package:iot/apps/tracking_page.dart';
 import 'package:iot/apps/weather_page.dart';
 import 'package:iot/models/gradient_model.dart';
 import 'package:iot/widgets/cards.dart';
@@ -11,7 +10,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'apps/aqi_page.dart';
-import 'apps/radar_page.dart';
 import 'utilities/colors.dart';
 
 class HomePage extends StatefulWidget {

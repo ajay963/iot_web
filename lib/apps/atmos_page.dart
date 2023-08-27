@@ -42,8 +42,8 @@ class AtmosMobileView extends StatelessWidget {
                 SizedBox(
                   height: 0.1 * MediaQuery.of(context).size.height,
                 ),
-                Row(
-                  children: const [],
+                const Row(
+                  children: [],
                 )
                 // ElevatedButton(onPressed: (){
                 //   dataController.

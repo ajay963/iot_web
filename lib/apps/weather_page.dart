@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:iot/models/master_model.dart';
 import 'package:iot/utilities/logger.dart';
 import 'package:iot/widgets/graph_charts.dart';
 import 'package:line_icons/line_icons.dart';
